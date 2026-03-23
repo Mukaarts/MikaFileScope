@@ -15,6 +15,7 @@ Part of the **Mika+** ecosystem.
 - Dark and Light mode support
 - Hidden files toggle (include/exclude dotfiles in scans)
 - File category filter (Images, Documents, Videos, Audio, Code, Archives, Other)
+- Timeline tab with file age distribution histogram
 
 ## Requirements
 
@@ -42,7 +43,6 @@ open Package.swift
 
 ## Phase 2 (Planned)
 
-- Timeline: modified date histogram
 - Duplicate file detection by size + hash
 - Menubar quick-scan mode
 - Sparkle auto-updates

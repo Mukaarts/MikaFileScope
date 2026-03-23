@@ -13,6 +13,7 @@ struct ContentView: View {
     enum Tab: String, CaseIterable {
         case list = "List"
         case charts = "Charts"
+        case timeline = "Timeline"
     }
 
     var body: some View {
@@ -186,7 +187,7 @@ struct ContentView: View {
             }
         }
         .pickerStyle(.segmented)
-        .frame(width: 200)
+        .frame(width: 300)
     }
 
     // MARK: - Main Content
@@ -198,6 +199,8 @@ struct ContentView: View {
             listTab
         case .charts:
             ChartView(groups: engine.filteredGroups, totalSize: engine.filteredTotalSize)
+        case .timeline:
+            HistogramView(dateBuckets: engine.dateBuckets)
         }
     }
 

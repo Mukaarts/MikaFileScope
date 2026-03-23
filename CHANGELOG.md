@@ -13,6 +13,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Category chip bar with teal-highlighted active category
 - "No files match this category" empty state for filtered views
 - Summary bar, export, and charts now reflect filtered data
+- Timeline tab with file age distribution histogram (file count + size by age)
+- Date buckets: Today, Past Week, Past Month, Past 3 Months, Past Year, Older
+- Teal-to-gray gradient coloring based on file recency
 
 ## [1.0.0] - 2026-03-23
 
