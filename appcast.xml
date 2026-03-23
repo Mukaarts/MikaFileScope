@@ -1,35 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <channel>
-    <title>Mika+FileScope</title>
-    <link>https://github.com/Mukaarts/MikaFileScope</link>
-    <description>Mika+FileScope update feed</description>
-    <language>en</language>
-    <item>
-      <title>Version 2.0.0</title>
-      <description><![CDATA[
-        <h2>Mika+FileScope v2.0.0</h2>
-        <ul>
-          <li>Recursive folder scanning with file type grouping</li>
-          <li>Sortable table, donut chart, and bar chart</li>
-          <li>CSV and JSON export</li>
-          <li>Hidden files toggle</li>
-          <li>File category filter</li>
-          <li>Timeline with file age histogram</li>
-          <li>Duplicate file detection (SHA-256)</li>
-          <li>Menubar quick-scan mode</li>
-          <li>Sparkle auto-updates</li>
-        </ul>
-      ]]></description>
-      <pubDate>Sun, 23 Mar 2026 12:00:00 +0000</pubDate>
-      <sparkle:version>1</sparkle:version>
-      <sparkle:shortVersionString>2.0.0</sparkle:shortVersionString>
-      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-      <enclosure url="https://github.com/Mukaarts/MikaFileScope/releases/download/v2.0.0/Mika+FileScope-v2.0.0.dmg"
-                 sparkle:version="1"
-                 sparkle:shortVersionString="2.0.0"
-                 length="0"
-                 type="application/octet-stream"/>
-    </item>
-  </channel>
+    <channel>
+        <title>Mika+FileScope</title>
+        <link>https://github.com/Mukaarts/MikaFileScope</link>
+        <description>Mika+FileScope update feed</description>
+        <language>en</language>
+    </channel>
 </rss>
