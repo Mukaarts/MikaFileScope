@@ -17,6 +17,7 @@ Part of the **Mika+** ecosystem.
 - File category filter (Images, Documents, Videos, Audio, Code, Archives, Other)
 - Timeline tab with file age distribution histogram
 - Duplicate file detection by SHA-256 hash with Reveal in Finder
+- Optional menubar quick-scan mode with compact summary popover
 
 ## Requirements
 
@@ -44,7 +45,6 @@ open Package.swift
 
 ## Phase 2 (Planned)
 
-- Menubar quick-scan mode
 - Sparkle auto-updates
 - DMG distribution
 

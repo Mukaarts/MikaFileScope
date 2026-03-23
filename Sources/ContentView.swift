@@ -5,12 +5,13 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @State private var engine = ScanEngine()
+    var engine: ScanEngine
     @State private var selectedTab: Tab = .list
     @State private var sortOrder = [KeyPathComparator(\FileTypeGroup.count, order: .reverse)]
     @State private var isDropTargeted = false
     @State private var duplicateDetector = DuplicateDetector()
     @State private var showDuplicates = false
+    @AppStorage("showMenubar") private var showMenubar = false
 
     enum Tab: String, CaseIterable {
         case list = "List"
@@ -133,6 +134,12 @@ struct ContentView: View {
                 Label("Find Duplicates", systemImage: "doc.on.doc")
             }
             .disabled(engine.scannedURLs.isEmpty || engine.isScanning)
+
+            Toggle(isOn: $showMenubar) {
+                Label("Menubar", systemImage: "menubar.rectangle")
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
 
             if engine.isScanning {
                 ProgressView()

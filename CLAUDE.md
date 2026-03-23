@@ -29,6 +29,8 @@ open Package.swift   # Open in Xcode
 - **HistogramView** — date histogram with file count and size charts by age bucket
 - **DuplicateDetector** — SHA-256 based duplicate detection with streaming hash (1 MB chunks)
 - **DuplicateResultView** — sheet UI for duplicate results with Reveal in Finder
+- **MenubarPopoverView** — compact menubar popover with scan summary
+- **AppDelegate** — manages shared ScanEngine, handles menubar lifecycle
 - **MikaPlusColors** — Mika+ brand colors, `NSColor(hex:)`, chart palette (8 hue rotations from #1D9E75)
 
 ## Conventions

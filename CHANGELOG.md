@@ -19,6 +19,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Duplicate file detection via SHA-256 hashing (streaming, 1 MB chunks)
 - Duplicate results sheet with file count, wasted space, and Reveal in Finder
 - Files grouped by size first, then hashed for efficiency (skips files < 1 KB)
+- Optional menubar quick-scan mode with compact popover (top 5 types, stats)
+- Menubar toggle in toolbar to show/hide menubar icon
+- App stays running when menubar mode is active and window is closed
 
 ## [1.0.0] - 2026-03-23
 
