@@ -3,3 +3,5 @@
 .swiftpm/
 *.xcodeproj
 xcuserdata/
+build/
+installer/
