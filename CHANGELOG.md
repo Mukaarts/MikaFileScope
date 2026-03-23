@@ -6,6 +6,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- Toggle to include/exclude hidden files (dotfiles, .DS_Store, etc.) in scans
+- Auto-rescan when hidden files toggle is changed
+
 ## [1.0.0] - 2026-03-23
 
 ### Added

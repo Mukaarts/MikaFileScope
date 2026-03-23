@@ -18,6 +18,7 @@ final class ScanEngine {
     var totalFiles: Int = 0
     var totalSize: Int64 = 0
     var errorMessage: String?
+    var includeHidden: Bool = false
 
     func scan(folder url: URL) {
         isScanning = true
@@ -25,8 +26,9 @@ final class ScanEngine {
         scannedFolderURL = url
 
         let folderURL = url
+        let includeHidden = self.includeHidden
         Task.detached {
-            let result = Self.performScan(at: folderURL)
+            let result = Self.performScan(at: folderURL, includeHidden: includeHidden)
             await MainActor.run { [weak self] in
                 guard let self else { return }
                 switch result {
@@ -56,17 +58,18 @@ final class ScanEngine {
         errorMessage = nil
     }
 
-    private nonisolated static func performScan(at url: URL) -> Result<ScanResult, Error> {
+    private nonisolated static func performScan(at url: URL, includeHidden: Bool = false) -> Result<ScanResult, Error> {
         let accessing = url.startAccessingSecurityScopedResource()
         defer {
             if accessing { url.stopAccessingSecurityScopedResource() }
         }
 
         let keys: [URLResourceKey] = [.fileSizeKey, .isDirectoryKey]
+        let options: FileManager.DirectoryEnumerationOptions = includeHidden ? [] : [.skipsHiddenFiles]
         guard let enumerator = FileManager.default.enumerator(
             at: url,
             includingPropertiesForKeys: keys,
-            options: [.skipsHiddenFiles]
+            options: options
         ) else {
             return .failure(NSError(
                 domain: "MikaFileScope",

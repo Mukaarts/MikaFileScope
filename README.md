@@ -13,6 +13,7 @@ Part of the **Mika+** ecosystem.
 - Drag-and-drop folder support
 - Non-blocking background scanning for large directories
 - Dark and Light mode support
+- Hidden files toggle (include/exclude dotfiles in scans)
 
 ## Requirements
 
@@ -40,7 +41,6 @@ open Package.swift
 
 ## Phase 2 (Planned)
 
-- Exclude hidden files toggle
 - Filter by file category (Images, Documents, Videos, Code, etc.)
 - Timeline: modified date histogram
 - Duplicate file detection by size + hash

@@ -79,6 +79,20 @@ struct ContentView: View {
             }
             .disabled(engine.scannedFolderURL == nil || engine.isScanning)
 
+            Toggle(isOn: Binding(
+                get: { engine.includeHidden },
+                set: { newValue in
+                    engine.includeHidden = newValue
+                    if engine.scannedFolderURL != nil {
+                        engine.rescan()
+                    }
+                }
+            )) {
+                Label("Hidden Files", systemImage: "eye.slash")
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
+
             Menu {
                 Button("Export CSV") {
                     ExportManager.exportCSV(
