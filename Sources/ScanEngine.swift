@@ -19,6 +19,22 @@ final class ScanEngine {
     var totalSize: Int64 = 0
     var errorMessage: String?
     var includeHidden: Bool = false
+    var selectedCategory: FileCategory = .all
+
+    var filteredGroups: [FileTypeGroup] {
+        guard selectedCategory != .all else { return groups }
+        return groups.filter { selectedCategory.matches(ext: $0.ext) }
+    }
+
+    var filteredTotalFiles: Int {
+        guard selectedCategory != .all else { return totalFiles }
+        return filteredGroups.reduce(0) { $0 + $1.count }
+    }
+
+    var filteredTotalSize: Int64 {
+        guard selectedCategory != .all else { return totalSize }
+        return filteredGroups.reduce(0) { $0 + $1.totalBytes }
+    }
 
     func scan(folder url: URL) {
         isScanning = true

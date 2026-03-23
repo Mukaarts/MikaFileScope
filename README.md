@@ -14,6 +14,7 @@ Part of the **Mika+** ecosystem.
 - Non-blocking background scanning for large directories
 - Dark and Light mode support
 - Hidden files toggle (include/exclude dotfiles in scans)
+- File category filter (Images, Documents, Videos, Audio, Code, Archives, Other)
 
 ## Requirements
 
@@ -41,7 +42,6 @@ open Package.swift
 
 ## Phase 2 (Planned)
 
-- Filter by file category (Images, Documents, Videos, Code, etc.)
 - Timeline: modified date histogram
 - Duplicate file detection by size + hash
 - Menubar quick-scan mode

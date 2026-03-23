@@ -9,6 +9,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 - Toggle to include/exclude hidden files (dotfiles, .DS_Store, etc.) in scans
 - Auto-rescan when hidden files toggle is changed
+- File category filter (All, Images, Documents, Videos, Audio, Code, Archives, Other)
+- Category chip bar with teal-highlighted active category
+- "No files match this category" empty state for filtered views
+- Summary bar, export, and charts now reflect filtered data
 
 ## [1.0.0] - 2026-03-23
 

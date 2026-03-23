@@ -25,6 +25,7 @@ open Package.swift   # Open in Xcode
 - **ChartView** — Swift Charts: donut (SectorMark) + horizontal bar (BarMark), top 8 + "Other"
 - **ExportManager** — CSV/JSON generation + NSSavePanel
 - **FileTypeGroup** — data model (`Identifiable, Hashable, Sendable`)
+- **FileCategory** — enum for semantic file categories (Images, Documents, etc.) with extension sets
 - **MikaPlusColors** — Mika+ brand colors, `NSColor(hex:)`, chart palette (8 hue rotations from #1D9E75)
 
 ## Conventions

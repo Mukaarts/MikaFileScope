@@ -17,19 +17,25 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            if engine.groups.isEmpty && !engine.isScanning {
+            if engine.scannedFolderURL == nil && !engine.isScanning {
                 emptyState
             } else {
                 summaryBar
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
 
+                categoryBar
+
                 Divider()
 
                 tabSwitcher
                     .padding(.top, 12)
 
-                mainContent
+                if engine.filteredGroups.isEmpty && !engine.isScanning {
+                    noMatchState
+                } else {
+                    mainContent
+                }
             }
         }
         .frame(minWidth: 800, minHeight: 600)
@@ -96,23 +102,23 @@ struct ContentView: View {
             Menu {
                 Button("Export CSV") {
                     ExportManager.exportCSV(
-                        groups: engine.groups,
-                        totalSize: engine.totalSize,
+                        groups: engine.filteredGroups,
+                        totalSize: engine.filteredTotalSize,
                         folderURL: engine.scannedFolderURL
                     )
                 }
                 Button("Export JSON") {
                     ExportManager.exportJSON(
-                        groups: engine.groups,
-                        totalFiles: engine.totalFiles,
-                        totalSize: engine.totalSize,
+                        groups: engine.filteredGroups,
+                        totalFiles: engine.filteredTotalFiles,
+                        totalSize: engine.filteredTotalSize,
                         folderURL: engine.scannedFolderURL
                     )
                 }
             } label: {
                 Label("Export", systemImage: "square.and.arrow.up")
             }
-            .disabled(engine.groups.isEmpty)
+            .disabled(engine.filteredGroups.isEmpty)
 
             if engine.isScanning {
                 ProgressView()
@@ -125,9 +131,9 @@ struct ContentView: View {
 
     private var summaryBar: some View {
         HStack(spacing: 16) {
-            StatPill(label: "Files", value: "\(engine.totalFiles)")
+            StatPill(label: "Files", value: "\(engine.filteredTotalFiles)")
             StatPill(label: "Total Size", value: formattedTotalSize)
-            StatPill(label: "Types", value: "\(engine.groups.count)")
+            StatPill(label: "Types", value: "\(engine.filteredGroups.count)")
             Spacer()
         }
     }
@@ -135,7 +141,40 @@ struct ContentView: View {
     private var formattedTotalSize: String {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .file
-        return formatter.string(fromByteCount: engine.totalSize)
+        return formatter.string(fromByteCount: engine.filteredTotalSize)
+    }
+
+    // MARK: - Category Bar
+
+    private var categoryBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(FileCategory.allCases) { category in
+                    Button {
+                        engine.selectedCategory = category
+                    } label: {
+                        Label(category.rawValue, systemImage: category.icon)
+                            .font(.caption)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(
+                                engine.selectedCategory == category
+                                    ? Color.MikaPlus.tealPrimary.opacity(0.2)
+                                    : Color.secondary.opacity(0.1),
+                                in: Capsule()
+                            )
+                            .foregroundStyle(
+                                engine.selectedCategory == category
+                                    ? Color.MikaPlus.tealPrimary
+                                    : .secondary
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+        .padding(.vertical, 6)
     }
 
     // MARK: - Tab Switcher
@@ -158,12 +197,12 @@ struct ContentView: View {
         case .list:
             listTab
         case .charts:
-            ChartView(groups: engine.groups, totalSize: engine.totalSize)
+            ChartView(groups: engine.filteredGroups, totalSize: engine.filteredTotalSize)
         }
     }
 
     private var listTab: some View {
-        Table(engine.groups, sortOrder: $sortOrder) {
+        Table(engine.filteredGroups, sortOrder: $sortOrder) {
             TableColumn("Extension", value: \.ext) { group in
                 HStack(spacing: 8) {
                     RoundedRectangle(cornerRadius: 2)
@@ -188,7 +227,7 @@ struct ContentView: View {
             .width(min: 80, ideal: 120)
 
             TableColumn("% of Total") { group in
-                let pct = group.percentage(of: engine.totalSize)
+                let pct = group.percentage(of: engine.filteredTotalSize)
                 HStack(spacing: 8) {
                     ProgressView(value: pct, total: 100)
                         .tint(Color.MikaPlus.tealPrimary)
@@ -234,6 +273,18 @@ struct ContentView: View {
         )
     }
 
+    private var noMatchState: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "line.3.horizontal.decrease.circle")
+                .font(.system(size: 40))
+                .foregroundStyle(.secondary)
+            Text("No files match this category")
+                .font(.title3)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
     // MARK: - Actions
 
     private func chooseFolder() {
@@ -268,7 +319,7 @@ struct ContentView: View {
 
     private func colorForGroup(_ group: FileTypeGroup) -> Color {
         let palette = Color.MikaPlus.chartPalette
-        let sorted = engine.groups.sorted { $0.totalBytes > $1.totalBytes }
+        let sorted = engine.filteredGroups.sorted { $0.totalBytes > $1.totalBytes }
         if let index = sorted.firstIndex(where: { $0.id == group.id }), index < palette.count {
             return palette[index]
         }
