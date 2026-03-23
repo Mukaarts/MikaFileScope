@@ -18,6 +18,7 @@ Part of the **Mika+** ecosystem.
 - Timeline tab with file age distribution histogram
 - Duplicate file detection by SHA-256 hash with Reveal in Finder
 - Optional menubar quick-scan mode with compact summary popover
+- Sparkle auto-updates with "Check for Updates" menu command
 
 ## Requirements
 
@@ -45,7 +46,6 @@ open Package.swift
 
 ## Phase 2 (Planned)
 
-- Sparkle auto-updates
 - DMG distribution
 
 ## License

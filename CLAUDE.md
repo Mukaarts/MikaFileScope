@@ -30,7 +30,8 @@ open Package.swift   # Open in Xcode
 - **DuplicateDetector** — SHA-256 based duplicate detection with streaming hash (1 MB chunks)
 - **DuplicateResultView** — sheet UI for duplicate results with Reveal in Finder
 - **MenubarPopoverView** — compact menubar popover with scan summary
-- **AppDelegate** — manages shared ScanEngine, handles menubar lifecycle
+- **AppDelegate** — manages shared ScanEngine, SparkleUpdater, handles menubar lifecycle
+- **SparkleUpdater** — Sparkle auto-update wrapper (identical pattern to MikaGrid/MikaScreenSnap)
 - **MikaPlusColors** — Mika+ brand colors, `NSColor(hex:)`, chart palette (8 hue rotations from #1D9E75)
 
 ## Conventions
@@ -39,7 +40,7 @@ open Package.swift   # Open in Xcode
 - `@Observable` (not Combine) for state management
 - `NSSavePanel`/`NSOpenPanel` for file dialogs (AppKit interop)
 - Brand colors via `Color.MikaPlus` / `NSColor.MikaPlus` (shared across Mika+ ecosystem)
-- No external dependencies (Phase 1)
+- Sparkle 2.6+ for auto-updates (SUFeedURL: GitHub raw/master appcast.xml)
 
 ## Git Workflow
 

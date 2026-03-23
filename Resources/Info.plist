@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>lu.daumedia.mikafilescope</string>
+    <key>CFBundleName</key>
+    <string>Mika+FileScope</string>
+    <key>CFBundleDisplayName</key>
+    <string>Mika+FileScope</string>
+    <key>CFBundleExecutable</key>
+    <string>MikaFileScope</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>2.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright 2025 dauMedia / Mika. All rights reserved.</string>
+    <key>SUFeedURL</key>
+    <string>https://raw.githubusercontent.com/Mukaarts/MikaFileScope/master/appcast.xml</string>
+    <key>SUPublicEDKey</key>
+    <string>eauiHgP4PM9ynLekAmo3URrX3ye3HW7D53xOZa5AeYI=</string>
+</dict>
+</plist>

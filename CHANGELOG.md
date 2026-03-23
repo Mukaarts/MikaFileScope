@@ -22,6 +22,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Optional menubar quick-scan mode with compact popover (top 5 types, stats)
 - Menubar toggle in toolbar to show/hide menubar icon
 - App stays running when menubar mode is active and window is closed
+- Sparkle auto-update integration with "Check for Updates" menu command
+- Info.plist with app metadata and Sparkle feed URL (GitHub raw/master)
 
 ## [1.0.0] - 2026-03-23
 

@@ -1,0 +1,37 @@
+// SparkleUpdater.swift
+// MikaFileScope
+//
+// Sparkle auto-update wrapper for checking and installing updates.
+// Swift 6.0 strict concurrency, macOS 14+
+
+@preconcurrency import Sparkle
+
+@MainActor
+final class SparkleUpdater {
+    private let updaterController: SPUStandardUpdaterController
+
+    var canCheckForUpdates: Bool {
+        updaterController.updater.canCheckForUpdates
+    }
+
+    var automaticallyChecksForUpdates: Bool {
+        get { updaterController.updater.automaticallyChecksForUpdates }
+        set { updaterController.updater.automaticallyChecksForUpdates = newValue }
+    }
+
+    init() {
+        self.updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
+    }
+
+    var lastUpdateCheckDate: Date? {
+        updaterController.updater.lastUpdateCheckDate
+    }
+
+    func checkForUpdates() {
+        updaterController.checkForUpdates(nil)
+    }
+}
