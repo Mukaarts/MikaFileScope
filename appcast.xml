@@ -25,6 +25,11 @@
       <sparkle:version>1</sparkle:version>
       <sparkle:shortVersionString>2.0.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure url="https://github.com/Mukaarts/MikaFileScope/releases/download/v2.0.0/Mika+FileScope-v2.0.0.dmg"
+                 sparkle:version="1"
+                 sparkle:shortVersionString="2.0.0"
+                 length="0"
+                 type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
