@@ -24,6 +24,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - App stays running when menubar mode is active and window is closed
 - Sparkle auto-update integration with "Check for Updates" menu command
 - Info.plist with app metadata and Sparkle feed URL (GitHub raw/master)
+- DMG distribution with build scripts (build.sh, create-dmg.sh, create-dmg-simple.sh)
+- DMG background generator with Mika+ branding (dark navy + teal accents)
+- GitHub Actions CI/CD workflow for automated releases on version tags
+- Code signing entitlements for hardened runtime
 
 ## [1.0.0] - 2026-03-23
 

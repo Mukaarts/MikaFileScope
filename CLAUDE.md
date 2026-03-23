@@ -42,6 +42,13 @@ open Package.swift   # Open in Xcode
 - Brand colors via `Color.MikaPlus` / `NSColor.MikaPlus` (shared across Mika+ ecosystem)
 - Sparkle 2.6+ for auto-updates (SUFeedURL: GitHub raw/master appcast.xml)
 
+## Distribution
+
+- `bash scripts/build.sh` — build release + assemble .app bundle + embed Sparkle + codesign
+- `bash scripts/create-dmg.sh` — create DMG with create-dmg CLI (brew install create-dmg)
+- `bash scripts/create-dmg-simple.sh` — fallback DMG with hdiutil
+- `.github/workflows/release.yml` — CI/CD on `v*` tags
+
 ## Git Workflow
 
 - New branch per feature/bugfix/refactor

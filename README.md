@@ -19,6 +19,7 @@ Part of the **Mika+** ecosystem.
 - Duplicate file detection by SHA-256 hash with Reveal in Finder
 - Optional menubar quick-scan mode with compact summary popover
 - Sparkle auto-updates with "Check for Updates" menu command
+- DMG distribution with build scripts and GitHub Actions CI/CD
 
 ## Requirements
 
@@ -44,9 +45,20 @@ Or open in Xcode:
 open Package.swift
 ```
 
-## Phase 2 (Planned)
+## Distribution
 
-- DMG distribution
+```bash
+# Build .app bundle
+bash scripts/build.sh
+
+# Create DMG (requires: brew install create-dmg)
+bash scripts/create-dmg.sh
+
+# Simple DMG fallback (no dependencies)
+bash scripts/create-dmg-simple.sh
+```
+
+Automated releases via GitHub Actions on `v*` tags.
 
 ## License
 
