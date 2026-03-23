@@ -27,6 +27,8 @@ open Package.swift   # Open in Xcode
 - **FileTypeGroup** — data model (`Identifiable, Hashable, Sendable`)
 - **FileCategory** — enum for semantic file categories (Images, Documents, etc.) with extension sets
 - **HistogramView** — date histogram with file count and size charts by age bucket
+- **DuplicateDetector** — SHA-256 based duplicate detection with streaming hash (1 MB chunks)
+- **DuplicateResultView** — sheet UI for duplicate results with Reveal in Finder
 - **MikaPlusColors** — Mika+ brand colors, `NSColor(hex:)`, chart palette (8 hue rotations from #1D9E75)
 
 ## Conventions

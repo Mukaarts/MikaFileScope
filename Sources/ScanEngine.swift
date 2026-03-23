@@ -16,6 +16,7 @@ struct ScanResult: Sendable {
     let totalFiles: Int
     let totalSize: Int64
     let dateBuckets: [DateBucket]
+    let fileURLs: [URL]
 }
 
 @Observable
@@ -30,6 +31,7 @@ final class ScanEngine {
     var includeHidden: Bool = false
     var selectedCategory: FileCategory = .all
     var dateBuckets: [DateBucket] = []
+    var scannedURLs: [URL] = []
 
     var filteredGroups: [FileTypeGroup] {
         guard selectedCategory != .all else { return groups }
@@ -63,6 +65,7 @@ final class ScanEngine {
                     self.totalFiles = data.totalFiles
                     self.totalSize = data.totalSize
                     self.dateBuckets = data.dateBuckets
+                    self.scannedURLs = data.fileURLs
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
                 }
@@ -84,6 +87,7 @@ final class ScanEngine {
         totalSize = 0
         errorMessage = nil
         dateBuckets = []
+        scannedURLs = []
     }
 
     private nonisolated static func performScan(at url: URL, includeHidden: Bool = false) -> Result<ScanResult, Error> {
@@ -108,6 +112,7 @@ final class ScanEngine {
 
         var dict: [String: (count: Int, bytes: Int64)] = [:]
         var dateBucketDict: [String: (count: Int, bytes: Int64, sortIndex: Int)] = [:]
+        var fileURLs: [URL] = []
         var totalFiles = 0
         var totalSize: Int64 = 0
 
@@ -121,6 +126,7 @@ final class ScanEngine {
 
                 totalFiles += 1
                 totalSize += fileSize
+                fileURLs.append(fileURL)
 
                 if var entry = dict[ext] {
                     entry.count += 1
@@ -157,7 +163,8 @@ final class ScanEngine {
             groups: groups,
             totalFiles: totalFiles,
             totalSize: totalSize,
-            dateBuckets: dateBuckets
+            dateBuckets: dateBuckets,
+            fileURLs: fileURLs
         ))
     }
 

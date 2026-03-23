@@ -16,6 +16,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Timeline tab with file age distribution histogram (file count + size by age)
 - Date buckets: Today, Past Week, Past Month, Past 3 Months, Past Year, Older
 - Teal-to-gray gradient coloring based on file recency
+- Duplicate file detection via SHA-256 hashing (streaming, 1 MB chunks)
+- Duplicate results sheet with file count, wasted space, and Reveal in Finder
+- Files grouped by size first, then hashed for efficiency (skips files < 1 KB)
 
 ## [1.0.0] - 2026-03-23
 

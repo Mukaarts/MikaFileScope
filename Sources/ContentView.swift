@@ -9,6 +9,8 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .list
     @State private var sortOrder = [KeyPathComparator(\FileTypeGroup.count, order: .reverse)]
     @State private var isDropTargeted = false
+    @State private var duplicateDetector = DuplicateDetector()
+    @State private var showDuplicates = false
 
     enum Tab: String, CaseIterable {
         case list = "List"
@@ -55,6 +57,9 @@ struct ContentView: View {
         }
         .onDrop(of: [.fileURL], isTargeted: $isDropTargeted) { providers in
             handleDrop(providers: providers)
+        }
+        .sheet(isPresented: $showDuplicates) {
+            DuplicateResultView(detector: duplicateDetector)
         }
     }
 
@@ -120,6 +125,14 @@ struct ContentView: View {
                 Label("Export", systemImage: "square.and.arrow.up")
             }
             .disabled(engine.filteredGroups.isEmpty)
+
+            Button {
+                duplicateDetector.detect(urls: engine.scannedURLs)
+                showDuplicates = true
+            } label: {
+                Label("Find Duplicates", systemImage: "doc.on.doc")
+            }
+            .disabled(engine.scannedURLs.isEmpty || engine.isScanning)
 
             if engine.isScanning {
                 ProgressView()

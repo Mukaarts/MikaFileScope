@@ -16,6 +16,7 @@ Part of the **Mika+** ecosystem.
 - Hidden files toggle (include/exclude dotfiles in scans)
 - File category filter (Images, Documents, Videos, Audio, Code, Archives, Other)
 - Timeline tab with file age distribution histogram
+- Duplicate file detection by SHA-256 hash with Reveal in Finder
 
 ## Requirements
 
@@ -43,7 +44,6 @@ open Package.swift
 
 ## Phase 2 (Planned)
 
-- Duplicate file detection by size + hash
 - Menubar quick-scan mode
 - Sparkle auto-updates
 - DMG distribution
