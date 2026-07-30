@@ -62,6 +62,8 @@ Automated releases via GitHub Actions on `v*` tags.
 
 ## Website
 
+**[filescope.daumedia.lu](https://filescope.daumedia.lu)**
+
 The marketing landing page lives in [`website/`](website/) — static HTML, CSS and a little vanilla
 JS, no build step. Deployed on Vercel with the project's **Root Directory** set to `website`.
 

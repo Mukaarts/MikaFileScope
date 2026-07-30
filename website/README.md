@@ -26,10 +26,17 @@ npx vercel --cwd website          # preview deployment
 npx vercel --cwd website --prod   # production deployment
 ```
 
-## After the first deploy
+## Domain
 
-The absolute URLs are pre-set to `https://mikafilescope.vercel.app`. If the project ends up on a
-different domain, update it in three places:
+The site is served from **`filescope.daumedia.lu`**. To attach it in Vercel:
+
+1. Project → **Settings → Domains** → add `filescope.daumedia.lu`
+2. At the DNS provider for `daumedia.lu`, add the record Vercel shows — for a subdomain that is
+   a `CNAME` pointing to `cname.vercel-dns.com`
+3. Wait for the certificate to be issued (usually a few minutes)
+
+Every absolute URL in the site is already set to that domain. If it ever changes, update it in
+three places:
 
 - `index.html` — `<link rel="canonical">`, `og:url`, `og:image`, `twitter:image`, and the JSON-LD `url`
 - `robots.txt` — the `Sitemap:` line
