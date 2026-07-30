@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mika+FileScope — See what's filling your Mac's disk</title>
+<meta name="description" content="A native macOS utility that scans any folder, groups every file by type, and shows where the space went — table, charts, age timeline and duplicate finder. Runs entirely on your Mac.">
+<link rel="canonical" href="https://mikafilescope.vercel.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mika+FileScope">
+<meta property="og:title" content="Mika+FileScope — See what's filling your Mac's disk">
+<meta property="og:description" content="Scan any folder, group every file by type, and find out where the space went. Charts, age timeline, SHA-256 duplicate finder. Native macOS, runs entirely on your Mac.">
+<meta property="og:url" content="https://mikafilescope.vercel.app/">
+<meta property="og:image" content="https://mikafilescope.vercel.app/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mika+FileScope — See what's filling your Mac's disk">
+<meta name="twitter:description" content="Scan any folder, group every file by type, and find out where the space went. Native macOS, runs entirely on your Mac.">
+<meta name="twitter:image" content="https://mikafilescope.vercel.app/assets/og-image.jpg">
+
+<meta name="theme-color" content="#0F0F1A">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Mika+FileScope",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "macOS 14.0 or later",
+  "softwareVersion": "2.0.0",
+  "url": "https://mikafilescope.vercel.app/",
+  "downloadUrl": "https://github.com/Mukaarts/MikaFileScope/releases/latest",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "dauMedia / Mika" }
+}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a class="nav__brand" href="#top">
+      <img src="/assets/icon.png" alt="" width="32" height="32" class="nav__icon">
+      <span>Mika<span class="plus">+</span>FileScope</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#install">Install</a>
+      <a href="https://github.com/Mukaarts/MikaFileScope">GitHub</a>
+    </nav>
+    <a class="btn btn--small" href="https://github.com/Mukaarts/MikaFileScope/releases/latest/download/Mika%2BFileScope-v2.0.0.dmg">Download</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ───────────────────────── Hero ───────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__inner">
+    <p class="eyebrow">Native macOS utility · Free · Open source</p>
+    <h1 class="hero__title">Find out what's actually <br class="br-wide">filling your disk.</h1>
+    <p class="hero__lead">
+      Mika+FileScope scans any folder on your Mac and groups every file by type — then shows you
+      where the space went as a sortable table, charts, an age timeline and a duplicate finder.
+    </p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="https://github.com/Mukaarts/MikaFileScope/releases/latest/download/Mika%2BFileScope-v2.0.0.dmg">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M8 1a.75.75 0 0 1 .75.75v7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-4 4a.75.75 0 0 1-1.06 0l-4-4a.75.75 0 0 1 1.06-1.06l2.72 2.72V1.75A.75.75 0 0 1 8 1ZM2.75 12.5a.75.75 0 0 1 .75.75v.25h9v-.25a.75.75 0 0 1 1.5 0v.5a1.25 1.25 0 0 1-1.25 1.25h-9.5A1.25 1.25 0 0 1 2 13.75v-.5a.75.75 0 0 1 .75-.75Z"/></svg>
+        Download for macOS
+      </a>
+      <a class="btn btn--ghost" href="https://github.com/Mukaarts/MikaFileScope">View source on GitHub</a>
+    </div>
+    <p class="hero__meta">Version 2.0.0 · macOS 14 Sonoma or later · Apple silicon · 2.1&nbsp;MB</p>
+
+    <figure class="shot shot--hero">
+      <img src="/assets/shots/list.webp" width="2560" height="1640"
+           alt="Mika+FileScope showing a scanned Downloads folder: 457 files, 117.86 GB, 21 file types, listed by extension with count, size and share of total."
+           fetchpriority="high" decoding="async">
+    </figure>
+  </div>
+</section>
+
+<!-- ───────────────────────── Trust ───────────────────────── -->
+<section class="band" aria-label="What the app does and does not do">
+  <div class="wrap grid grid--3">
+    <div class="pill">
+      <h2 class="pill__title">Everything stays local</h2>
+      <p>No account, no analytics, no telemetry. The app itself makes no network requests — the only connection it opens is the check for updates.</p>
+    </div>
+    <div class="pill">
+      <h2 class="pill__title">It never deletes anything</h2>
+      <p>The duplicate finder reports what it found and reveals each copy in Finder. What happens to those files stays your decision.</p>
+    </div>
+    <div class="pill">
+      <h2 class="pill__title">Open source</h2>
+      <p>Written in Swift 6 with SwiftUI and Swift Charts. Read every line on GitHub, or build it yourself in two commands.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Features ───────────────────────── -->
+<section class="section" id="features">
+  <div class="wrap">
+    <h2 class="section__title">What it does</h2>
+    <p class="section__lead">Eight ways to look at a folder — all from a single scan.</p>
+
+    <div class="grid grid--4 cards">
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M12 11v5m-2.5-2.5h5"/></svg>
+        </span>
+        <h3>Recursive folder scan</h3>
+        <p>Drop a folder on the window or pick one from the toolbar. Scanning runs in the background, so the window stays responsive even on large directories.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="20" cy="18" r="1.6"/></svg>
+        </span>
+        <h3>Breakdown by file type</h3>
+        <p>A sortable table of every extension with file count, total size and share of the whole — so the one type eating 98% of the folder is impossible to miss.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3.5v5"/></svg>
+        </span>
+        <h3>Charts</h3>
+        <p>A donut for size distribution and a horizontal bar chart for the largest types — top eight plus a combined “Other”, drawn with Swift Charts.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9m5 10V5m5 14v-7m5 7V8"/></svg>
+        </span>
+        <h3>Age timeline</h3>
+        <p>How much of the folder is recent and how much has just been sitting there: Today, Past Week, Past Month, Past 3 Months, Past Year, Older — by count and by size.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+        </span>
+        <h3>Duplicate finder</h3>
+        <p>Files are grouped by size first, then hashed with SHA-256 in 1 MB chunks. You get the number of copies, the space you could recover, and Reveal in Finder for every single one.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6.2 7.4V19l-3.6-2v-4.6Z"/></svg>
+        </span>
+        <h3>Category filter</h3>
+        <p>Narrow everything down to Images, Documents, Videos, Audio, Code, Archives or Other. Table, charts, summary and export all follow the filter.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5"/><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M9 13h6M9 17h4"/></svg>
+        </span>
+        <h3>CSV &amp; JSON export</h3>
+        <p>Save the breakdown as CSV with human-readable sizes and percentages, or as JSON including the folder path, a timestamp and the totals.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4.5" rx="1.5"/><path d="M8 8.5v3.2a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8.5"/><path d="M12 13.7V20"/></svg>
+        </span>
+        <h3>Menubar quick scan</h3>
+        <p>Turn on the menubar icon and keep a compact summary one click away — totals plus the top five file types, without the main window.</p>
+      </article>
+
+    </div>
+
+    <p class="also">Also included: hidden-files toggle · drag-and-drop · full Dark and Light mode · Sparkle auto-updates · rescan in one click</p>
+  </div>
+</section>
+
+<!-- ───────────────────────── Screenshots ───────────────────────── -->
+<section class="section section--alt" id="screenshots">
+  <div class="wrap">
+    <h2 class="section__title">Every view, from one scan</h2>
+    <p class="section__lead">Real screenshots — no mockups.</p>
+
+    <div class="tabs" role="tablist" aria-label="Screenshots">
+      <button role="tab" id="tab-list" aria-controls="panel-list" aria-selected="true" class="tabs__btn">Overview</button>
+      <button role="tab" id="tab-charts" aria-controls="panel-charts" aria-selected="false" class="tabs__btn" tabindex="-1">Charts</button>
+      <button role="tab" id="tab-timeline" aria-controls="panel-timeline" aria-selected="false" class="tabs__btn" tabindex="-1">Timeline</button>
+      <button role="tab" id="tab-duplicates" aria-controls="panel-duplicates" aria-selected="false" class="tabs__btn" tabindex="-1">Duplicates</button>
+    </div>
+
+    <div class="panels">
+      <figure role="tabpanel" id="panel-list" aria-labelledby="tab-list" class="shot panel">
+        <img src="/assets/shots/list.webp" width="2560" height="1640" loading="lazy" decoding="async"
+             alt="The List tab: 457 files, 117.86 GB across 21 types, sorted by count, with .MP4 holding 98.5 % of the total size.">
+        <figcaption>A 118 GB Downloads folder by extension. One file type accounts for 98.5 % of it.</figcaption>
+      </figure>
+
+      <figure role="tabpanel" id="panel-charts" aria-labelledby="tab-charts" class="shot panel" hidden>
+        <img src="/assets/shots/charts.webp" width="2560" height="1640" loading="lazy" decoding="async"
+             alt="The Charts tab with the Images category selected: a donut chart of size distribution across seven image formats plus a bar chart of the largest types.">
+        <figcaption>Size distribution for the Images category — the filter applies to every view at once.</figcaption>
+      </figure>
+
+      <figure role="tabpanel" id="panel-timeline" aria-labelledby="tab-timeline" class="shot panel" hidden>
+        <img src="/assets/shots/timeline.webp" width="2560" height="1640" loading="lazy" decoding="async"
+             alt="The Timeline tab: file age distribution as two bar charts, file count by age and total size by age, bucketed from Today to Older.">
+        <figcaption>File age distribution — by number of files and by the space they occupy.</figcaption>
+      </figure>
+
+      <figure role="tabpanel" id="panel-duplicates" aria-labelledby="tab-duplicates" class="shot panel" hidden>
+        <img src="/assets/shots/duplicates.webp" width="2560" height="1640" loading="lazy" decoding="async"
+             alt="The duplicate results sheet: 242 groups and 538.8 MB recoverable, each group listing its copies with a Reveal in Finder button.">
+        <figcaption>242 duplicate groups, 538.8 MB recoverable. Nothing is deleted — every copy can be revealed in Finder.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── How it works ───────────────────────── -->
+<section class="section" id="how">
+  <div class="wrap">
+    <h2 class="section__title">Three steps</h2>
+    <ol class="steps">
+      <li>
+        <span class="steps__num">1</span>
+        <h3>Drop a folder</h3>
+        <p>Drag it onto the window or pick it from the toolbar. The scan walks the folder recursively while you keep using the app.</p>
+      </li>
+      <li>
+        <span class="steps__num">2</span>
+        <h3>Read the breakdown</h3>
+        <p>Switch between the table, the charts and the timeline. Filter by category when you want to look at one kind of file only.</p>
+      </li>
+      <li>
+        <span class="steps__num">3</span>
+        <h3>Export or clean up</h3>
+        <p>Save the numbers as CSV or JSON, or run the duplicate finder and review the copies in Finder.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ───────────────────────── Install ───────────────────────── -->
+<section class="section section--alt" id="install">
+  <div class="wrap install">
+    <div>
+      <h2 class="section__title">Install</h2>
+      <p class="section__lead">Download the DMG and drag Mika+FileScope into your Applications folder.</p>
+
+      <a class="btn btn--primary btn--wide" href="https://github.com/Mukaarts/MikaFileScope/releases/latest/download/Mika%2BFileScope-v2.0.0.dmg">
+        Download Mika+FileScope 2.0.0
+      </a>
+
+      <dl class="specs">
+        <div><dt>Requires</dt><dd>macOS 14 Sonoma or later</dd></div>
+        <div><dt>Architecture</dt><dd>Apple silicon</dd></div>
+        <div><dt>Size</dt><dd>2.1 MB</dd></div>
+        <div><dt>Price</dt><dd>Free</dd></div>
+      </dl>
+    </div>
+
+    <div class="note">
+      <h3 class="note__title">First launch takes one extra click</h3>
+      <p>
+        The app is signed ad-hoc rather than with a paid Apple Developer ID, so it is not notarized.
+        macOS will refuse the first double-click and warn that it cannot verify the developer. To open it anyway:
+      </p>
+      <ol>
+        <li>Right-click <strong>Mika+FileScope</strong> in Applications and choose <strong>Open</strong>, then confirm with <strong>Open</strong>.</li>
+        <li>Or go to <strong>System Settings → Privacy &amp; Security</strong> and click <strong>Open Anyway</strong> next to the blocked-app notice.</li>
+      </ol>
+      <p class="note__foot">You only have to do this once. If you would rather not, build it from source instead — the result is identical.</p>
+
+      <div class="code">
+        <div class="code__bar">
+          <span>Terminal</span>
+          <button class="code__copy" type="button" data-copy="git clone https://github.com/Mukaarts/MikaFileScope.git&#10;cd MikaFileScope&#10;swift run">Copy</button>
+        </div>
+        <pre><code>git clone https://github.com/Mukaarts/MikaFileScope.git
+cd MikaFileScope
+swift run</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <div class="footer__brand">
+      <img src="/assets/icon.png" alt="" width="40" height="40">
+      <div>
+        <strong>Mika<span class="plus">+</span>FileScope</strong>
+        <span>Part of the Mika+ ecosystem</span>
+      </div>
+    </div>
+    <nav class="footer__links" aria-label="Footer">
+      <a href="https://github.com/Mukaarts/MikaFileScope">Source</a>
+      <a href="https://github.com/Mukaarts/MikaFileScope/releases">Releases</a>
+      <a href="https://github.com/Mukaarts/MikaFileScope/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/Mukaarts/MikaFileScope/issues">Report an issue</a>
+    </nav>
+    <p class="footer__copy">© 2025 dauMedia / Mika. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

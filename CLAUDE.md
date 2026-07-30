@@ -48,6 +48,17 @@ open Package.swift   # Open in Xcode
 - `bash scripts/create-dmg.sh` — create DMG with create-dmg CLI (brew install create-dmg)
 - `bash scripts/create-dmg-simple.sh` — fallback DMG with hdiutil
 - `.github/workflows/release.yml` — CI/CD on `v*` tags
+- Signed **ad-hoc** (`codesign --sign -`), not notarized → Gatekeeper blocks the first launch
+- `swift build -c release` produces a **host-architecture** binary only (arm64), not a universal one
+
+## Website
+
+- `website/` — static marketing landing page (HTML + CSS + ~60 lines vanilla JS, no build step)
+- Vercel: import the repo with **Root Directory = `website`**, Framework Preset *Other*
+- Palette mirrors `Sources/MikaPlusColors.swift`; keep the two in sync
+- `swift scripts/GenerateOGImage.swift` — regenerates `website/assets/og-image.jpg` from the app icon
+- Screenshots in `website/assets/shots/` are real captures, Dark Mode, 1280×820 window, WebP
+- Version, download URL and file size are hard-coded in `website/index.html` — update them per release
 
 ## Git Workflow
 
