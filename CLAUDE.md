@@ -54,7 +54,8 @@ open Package.swift   # Open in Xcode
 ## Website
 
 - `website/` — static marketing landing page (HTML + CSS + ~60 lines vanilla JS, no build step)
-- Vercel: import the repo with **Root Directory = `website`**, Framework Preset *Other*
+- Live at **filescope.daumedia.lu** (Vercel, **Root Directory = `website`**, Framework Preset *Other*)
+- Absolute URLs live in `index.html` (canonical/OG/JSON-LD), `robots.txt` and `sitemap.xml` — change all three together
 - Palette mirrors `Sources/MikaPlusColors.swift`; keep the two in sync
 - `swift scripts/GenerateOGImage.swift` — regenerates `website/assets/og-image.jpg` from the app icon
 - Screenshots in `website/assets/shots/` are real captures, Dark Mode, 1280×820 window, WebP
