@@ -60,6 +60,17 @@ bash scripts/create-dmg-simple.sh
 
 Automated releases via GitHub Actions on `v*` tags.
 
+## Website
+
+The marketing landing page lives in [`website/`](website/) — static HTML, CSS and a little vanilla
+JS, no build step. Deployed on Vercel with the project's **Root Directory** set to `website`.
+
+```bash
+cd website && python3 -m http.server 8080   # local preview
+```
+
+See [`website/README.md`](website/README.md) for deployment and how to regenerate the assets.
+
 ## License
 
 Copyright 2025 dauMedia / Mika. All rights reserved.

@@ -7,6 +7,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Marketing landing page in `website/` — static HTML/CSS, no build step, deployable on Vercel with
+  root directory `website`
+- Real app screenshots (List, Charts, Timeline, Duplicates) captured in Dark Mode and served as WebP
+- `scripts/GenerateOGImage.swift` — renders the 1200×630 social preview from the app icon via AppKit
+- Landing page states the ad-hoc signature and the resulting first-launch step explicitly, plus the
+  Apple silicon requirement
 - Toggle to include/exclude hidden files (dotfiles, .DS_Store, etc.) in scans
 - Auto-rescan when hidden files toggle is changed
 - File category filter (All, Images, Documents, Videos, Audio, Code, Archives, Other)
