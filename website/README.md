@@ -14,7 +14,7 @@ python3 -m http.server 8080
 
 **Option A — Git integration (recommended)**
 
-1. Import `Mukaarts/MikaFileScope` at [vercel.com/new](https://vercel.com/new)
+1. Import `daumedia/MikaFileScope` at [vercel.com/new](https://vercel.com/new)
 2. Set **Root Directory** to `website`
 3. Framework Preset: **Other** (no build command, no output directory)
 4. Deploy. Every push to `main` redeploys automatically.

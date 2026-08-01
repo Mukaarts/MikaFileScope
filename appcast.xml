@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
         <title>Mika+FileScope</title>
-        <link>https://github.com/Mukaarts/MikaFileScope</link>
+        <link>https://github.com/daumedia/MikaFileScope</link>
         <description>Mika+FileScope update feed</description>
         <language>en</language>
     </channel>
