@@ -27,43 +27,89 @@ final class DuplicateDetector {
     var progress: Double = 0
     var totalWastedBytes: Int64 = 0
 
+    /// Anzahl der Dateien, die wegen der Größenschwelle nicht geprüft wurden.
+    /// Sichtbar zu machen, damit „keine Duplikate" nicht heißt „nicht gesucht".
+    var skippedTooSmall: Int = 0
+    /// Untergrenze für den Vergleich. Kleinere Dateien erzeugen Massen belangloser Treffer.
+    nonisolated static let minimumSize: Int64 = 1024
+
+    private var task: Task<Void, Never>?
+
     func detect(urls: [URL]) {
         guard !urls.isEmpty else { return }
+        task?.cancel()
         isDetecting = true
         progress = 0
         duplicateGroups = []
         totalWastedBytes = 0
+        skippedTooSmall = 0
 
         let fileURLs = urls
-        Task {
-            let result = await Task.detached {
-                Self.findDuplicates(urls: fileURLs)
-            }.value
-            self.duplicateGroups = result.sorted { $0.wastedBytes > $1.wastedBytes }
-            self.totalWastedBytes = result.reduce(0) { $0 + $1.wastedBytes }
-            self.isDetecting = false
-            self.progress = 1.0
+        task = Task { [weak self] in
+            let stream = AsyncStream<Double> { continuation in
+                Task.detached {
+                    let result = Self.findDuplicates(urls: fileURLs) { done, total in
+                        continuation.yield(total > 0 ? Double(done) / Double(total) : 0)
+                    }
+                    continuation.finish()
+                    await MainActor.run { [weak self] in
+                        guard let self, !Task.isCancelled else { return }
+                        self.duplicateGroups = result.groups.sorted { $0.wastedBytes > $1.wastedBytes }
+                        self.totalWastedBytes = result.groups.reduce(0) { $0 + $1.wastedBytes }
+                        self.skippedTooSmall = result.skipped
+                        self.isDetecting = false
+                        self.progress = 1.0
+                    }
+                }
+            }
+            for await p in stream {
+                guard let self, !Task.isCancelled else { return }
+                self.progress = p
+            }
         }
     }
 
-    private nonisolated static func findDuplicates(urls: [URL]) -> [DuplicateGroup] {
-        // Phase 1: Group by file size (skip files < 1 KB)
+    /// Bricht einen laufenden Suchlauf ab.
+    func cancel() {
+        task?.cancel()
+        task = nil
+        isDetecting = false
+    }
+
+    private nonisolated static func findDuplicates(
+        urls: [URL],
+        onProgress: (Int, Int) -> Void
+    ) -> (groups: [DuplicateGroup], skipped: Int) {
+        // Stufe 1: nach Größe gruppieren. Dateien unter der Schwelle bleiben außen vor,
+        // werden aber gezählt, damit die Oberfläche es benennen kann.
         var sizeGroups: [Int64: [URL]] = [:]
+        var skipped = 0
+        // Dateisystem-Identität (Gerät + Inode): Hardlinks zeigen auf dieselben Daten.
+        // Sie zu löschen gibt keinen Platz frei — sie dürfen nicht als Duplikat gelten.
+        var seenInodes = Set<String>()
+
         for url in urls {
-            if let size = try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize {
-                let size64 = Int64(size)
-                guard size64 >= 1024 else { continue }
-                sizeGroups[size64, default: []].append(url)
+            guard let v = try? url.resourceValues(forKeys: [.fileSizeKey, .fileResourceIdentifierKey])
+            else { continue }
+            let size64 = Int64(v.fileSize ?? 0)
+            guard size64 >= minimumSize else { skipped += 1; continue }
+            if let ident = v.fileResourceIdentifier {
+                let key = String(describing: ident)
+                if seenInodes.contains(key) { continue }
+                seenInodes.insert(key)
             }
+            sizeGroups[size64, default: []].append(url)
         }
 
         let candidates = sizeGroups.filter { $0.value.count >= 2 }
+        let total = candidates.reduce(0) { $0 + $1.value.count }
+        var done = 0
 
-        // Phase 2: SHA-256 hash files of the same size
+        // Stufe 2: SHA-256 für Dateien gleicher Größe
         var hashGroups: [String: (size: Int64, urls: [URL])] = [:]
-
         for (size, fileURLs) in candidates {
             for fileURL in fileURLs {
+                if Task.isCancelled { return (groups: [], skipped: skipped) }
                 if let hash = sha256Hash(of: fileURL) {
                     if var group = hashGroups[hash] {
                         group.urls.append(fileURL)
@@ -72,12 +118,15 @@ final class DuplicateDetector {
                         hashGroups[hash] = (size: size, urls: [fileURL])
                     }
                 }
+                done += 1
+                onProgress(done, total)
             }
         }
 
-        return hashGroups
+        let groups = hashGroups
             .filter { $0.value.urls.count >= 2 }
             .map { DuplicateGroup(hash: $0.key, fileSize: $0.value.size, urls: $0.value.urls) }
+        return (groups: groups, skipped: skipped)
     }
 
     /// Streaming SHA-256 hash using 1 MB chunks to avoid loading large files into memory
