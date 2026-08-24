@@ -1,0 +1,34 @@
+Mika+FileScope answers a question macOS has no good tool for: what is actually in this folder, and which part of it is eating the space?
+
+Drop a folder in, scan once — and that single pass produces five views of the same set of files.
+
+SORTABLE TABLE
+Every extension that occurs, with count, total size and share of the whole. The one type that makes up 98% of the folder is impossible to miss.
+
+CHARTS
+A donut for the size distribution and a bar chart of the largest types. The eight biggest individually, everything else as one collected entry.
+
+AGE DISTRIBUTION
+How much of the folder is from today, from last week, from last year — and how much is simply lying there. Split by file count and by volume.
+
+DUPLICATE DETECTION
+Finds files with identical content through their SHA-256 checksum, not through their name. Shows how much space would be freed, and opens any hit in the Finder.
+
+CATEGORY FILTER
+Images, documents, video, audio, code, archives — table, charts, totals, export and duplicate detection all follow the selection.
+
+MENU BAR
+An optional icon keeps the totals and the five largest types one click away, without the window being open.
+
+EXPORT
+The breakdown as CSV for a spreadsheet, or as JSON for a script.
+
+
+TWO THINGS THAT ARE DIFFERENT
+
+Nothing leaves your Mac. No account, no analytics, no telemetry, no ads. The app makes not a single network request — you can read that in the public source.
+
+It deletes nothing. Duplicate detection shows you what is stored twice and opens it in the Finder. What happens next is your decision.
+
+
+Runs on Apple silicon and Intel. Requires macOS 14 Sonoma or later.

@@ -70,6 +70,26 @@ open Package.swift   # Open in Xcode
   und `MikaFileScope-AppStore.entitlements` (Sandbox, `user-selected.read-only`, Bookmarks)
 - `swift build -c release` erzeugt nur die Host-Architektur; `--universal` baut beide
 
+## App-Store-Paket
+
+- `AppStore/` — Texte, Screenshots und die Werkzeuge, um beides neu zu erzeugen.
+  Aufbau nach Fastlane-Konvention (`metadata/<locale>/*.txt`), damit ein späterer
+  Wechsel auf `fastlane deliver` ohne Umbau geht
+- **`en-US` ist die einzige Lokalisierung** — die Oberfläche der App ist englisch,
+  eine deutsche Headline darüber läse sich wie ein Fehler. Die Struktur ist trotzdem
+  mehrsprachig angelegt
+- `AppStore/tools/capture.sh` nimmt die fünf Rohaufnahmen auf (Demo-Ordner, App
+  starten, Klicks an festen Koordinaten), `swift AppStore/tools/compose.swift` setzt
+  daraus die fertigen 2880×1800-Bilder
+- **Vier Layouts** (`hero`, `text-top`, `frame-top`, `highlight`) und zwei Themen,
+  konfiguriert in `AppStore/tools/shots.json` — fünf gleich aufgebaute Kacheln lesen
+  sich in der Galerie wie ein Bild. `frame-top` schneidet **oben** ab und passt nur
+  zu Ansichten, deren Inhalt unten liegt
+- `swift test --filter StoreAssetTests` prüft Zeichenlimits, Bildmaße, Alphakanal und
+  dass jedes Motiv eine eigene Rohaufnahme hat — genau die Fehler, die hier schon
+  einmal vorkamen
+- `AppStore/CHECKLISTE.md` listet, was nur im Apple-Konto zu erledigen ist
+
 ## Website
 
 - `website/` — static marketing landing page (HTML + CSS + ~60 lines vanilla JS, no build step)

@@ -1,0 +1,9 @@
+• Scanning and duplicate detection can now be cancelled
+• Duplicate detection shows real progress and states how many files were skipped because of the size threshold
+• Hard links are recognised and no longer counted as recoverable space
+• Applications and other bundles count as one item instead of hundreds of separate files
+• Folder selection directly from the menu bar
+• Duplicate detection and the menu bar now follow the category filter as well
+• Labels for the table, the charts and the timeline — the app is usable with VoiceOver
+• The last scanned folder is restored after a restart
+• Now runs on Intel Macs as well
