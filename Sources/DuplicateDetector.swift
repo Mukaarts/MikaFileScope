@@ -46,26 +46,31 @@ final class DuplicateDetector {
 
         let fileURLs = urls
         task = Task { [weak self] in
-            let stream = AsyncStream<Double> { continuation in
-                Task.detached {
-                    let result = Self.findDuplicates(urls: fileURLs) { done, total in
-                        continuation.yield(total > 0 ? Double(done) / Double(total) : 0)
-                    }
-                    continuation.finish()
-                    await MainActor.run { [weak self] in
-                        guard let self, !Task.isCancelled else { return }
-                        self.duplicateGroups = result.groups.sorted { $0.wastedBytes > $1.wastedBytes }
-                        self.totalWastedBytes = result.groups.reduce(0) { $0 + $1.wastedBytes }
-                        self.skippedTooSmall = result.skipped
-                        self.isDetecting = false
-                        self.progress = 1.0
-                    }
+            // Der Hintergrund-Task berührt `self` nicht: Er meldet Fortschritt über
+            // den Stream und gibt sein Ergebnis zurück. Nur der äußere Task — der auf
+            // dem Main Actor läuft — schreibt in den Zustand. Andernfalls geriete
+            // MainActor-isoliertes `self` in eine nebenläufige Ausführung.
+            let (stream, continuation) = AsyncStream<Double>.makeStream()
+            let arbeit = Task.detached {
+                let ergebnis = Self.findDuplicates(urls: fileURLs) { done, total in
+                    continuation.yield(total > 0 ? Double(done) / Double(total) : 0)
                 }
+                continuation.finish()
+                return ergebnis
             }
+
             for await p in stream {
-                guard let self, !Task.isCancelled else { return }
+                guard let self, !Task.isCancelled else { break }
                 self.progress = p
             }
+
+            let ergebnis = await arbeit.value
+            guard let self, !Task.isCancelled else { return }
+            self.duplicateGroups = ergebnis.groups.sorted { $0.wastedBytes > $1.wastedBytes }
+            self.totalWastedBytes = ergebnis.groups.reduce(0) { $0 + $1.wastedBytes }
+            self.skippedTooSmall = ergebnis.skipped
+            self.isDetecting = false
+            self.progress = 1.0
         }
     }
 
