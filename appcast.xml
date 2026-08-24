@@ -2,8 +2,30 @@
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
         <title>Mika+FileScope</title>
-        <link>https://github.com/Mukaarts/MikaFileScope</link>
+        <link>https://github.com/daumedia/MikaFileScope</link>
         <description>Mika+FileScope update feed</description>
         <language>en</language>
+
+        <!-- Jeder Eintrag beschreibt ein VERÖFFENTLICHTES Artefakt.
+             sparkle:version ist die CFBundleVersion genau dieses Artefakts — Sparkle
+             vergleicht sie, nicht die Kurzversion. Sie muss mit jedem Release steigen,
+             sonst bietet der Feed dasselbe Update endlos erneut an. -->
+        <item>
+            <title>Version 2.0.0</title>
+            <pubDate>Mon, 23 Mar 2026 20:00:18 +0000</pubDate>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>2.0.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <p>Hidden-files toggle, category filter, age timeline, SHA-256 duplicate
+                finder, optional menubar quick scan and Sparkle auto-updates.</p>
+                <p>Full notes: <a href="https://github.com/daumedia/MikaFileScope/blob/main/CHANGELOG.md">CHANGELOG.md</a></p>
+            ]]></description>
+            <enclosure
+                url="https://github.com/daumedia/MikaFileScope/releases/download/v2.0.0/Mika%2BFileScope-v2.0.0.dmg"
+                length="2168264"
+                type="application/octet-stream"
+                sparkle:edSignature="ZXKOiNyxvpR+xosSzLsqhyfH1ARxPVnW1zIEpd7yPoyqjTNkZpogr5Epp52r+LCvpa9PZDfUHcId9PMTSnnRCA=="/>
+        </item>
     </channel>
 </rss>
