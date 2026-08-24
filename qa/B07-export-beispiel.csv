@@ -1,0 +1,10 @@
+Extension,Count,Size (Bytes),Size (Human),Percentage
+".PNG",5,9600,"10 KB",5.1%
+".BIN",4,11000,"11 KB",5.9%
+".PDF",3,65008,"65 KB",34.7%
+"(no extension)",2,3600,"4 KB",1.9%
+".TXT",2,1800,"2 KB",1.0%
+".PLIST",1,400,"400 bytes",0.2%
+".MP4",1,90000,"90 KB",48.0%
+".ZIP",1,5000,"5 KB",2.7%
+".SWIFT",1,1200,"1 KB",0.6%

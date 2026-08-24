@@ -11,7 +11,7 @@ struct ContentView: View {
     @State private var isDropTargeted = false
     @State private var duplicateDetector = DuplicateDetector()
     @State private var showDuplicates = false
-    @AppStorage("showMenubar") private var showMenubar = false
+    @AppStorage(AppStorageKeys.showMenubar) private var showMenubar = false
 
     enum Tab: String, CaseIterable {
         case list = "List"
@@ -27,6 +27,17 @@ struct ContentView: View {
                 summaryBar
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
+
+                if engine.unreadableCount > 0 {
+                    Label(
+                        "\(engine.unreadableCount) Datei(en) konnten nicht gelesen werden und fehlen in den Summen",
+                        systemImage: "exclamationmark.triangle"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Color.MikaPlus.destructive)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 8)
+                }
 
                 categoryBar
 
@@ -119,7 +130,8 @@ struct ContentView: View {
                         groups: engine.filteredGroups,
                         totalFiles: engine.filteredTotalFiles,
                         totalSize: engine.filteredTotalSize,
-                        folderURL: engine.scannedFolderURL
+                        folderURL: engine.scannedFolderURL,
+                        scannedAt: engine.scannedAt
                     )
                 }
             } label: {
@@ -128,12 +140,14 @@ struct ContentView: View {
             .disabled(engine.filteredGroups.isEmpty)
 
             Button {
-                duplicateDetector.detect(urls: engine.scannedURLs)
+                // Folgt derselben Kategorie wie Tabelle, Diagramme und Export.
+                duplicateDetector.detect(urls: engine.filteredURLs)
                 showDuplicates = true
             } label: {
                 Label("Find Duplicates", systemImage: "doc.on.doc")
             }
-            .disabled(engine.scannedURLs.isEmpty || engine.isScanning)
+            .disabled(engine.filteredURLs.isEmpty || engine.isScanning)
+            .help("Sucht Duplikate in der aktuell gewählten Kategorie")
 
             Toggle(isOn: $showMenubar) {
                 Label("Menubar", systemImage: "menubar.rectangle")
@@ -142,8 +156,18 @@ struct ContentView: View {
             .controlSize(.small)
 
             if engine.isScanning {
-                ProgressView()
-                    .controlSize(.small)
+                HStack(spacing: 6) {
+                    ProgressView()
+                        .controlSize(.small)
+                    Text("\(engine.scannedSoFar > 0 ? "\(engine.scannedSoFar) " : "")Dateien")
+                        .font(.caption)
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                    Button("Abbrechen") { engine.cancelScan() }
+                        .controlSize(.small)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Scan läuft")
             }
         }
     }
@@ -231,9 +255,11 @@ struct ContentView: View {
                     RoundedRectangle(cornerRadius: 2)
                         .fill(colorForGroup(group))
                         .frame(width: 4, height: 18)
+                        .accessibilityHidden(true)
                     Text(group.displayExt)
                         .font(.system(.body, design: .monospaced))
                 }
+                .accessibilityLabel("Dateityp \(group.displayExt)")
             }
             .width(min: 120, ideal: 160)
 
@@ -249,7 +275,8 @@ struct ContentView: View {
             }
             .width(min: 80, ideal: 120)
 
-            TableColumn("% of Total") { group in
+            // Sortierbar wie die übrigen Spalten — der Anteil folgt der Größe.
+            TableColumn("% of Total", value: \.totalBytes) { group in
                 let pct = group.percentage(of: engine.filteredTotalSize)
                 HStack(spacing: 8) {
                     ProgressView(value: pct, total: 100)
@@ -259,6 +286,9 @@ struct ContentView: View {
                         .monospacedDigit()
                         .foregroundStyle(.secondary)
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Anteil")
+                .accessibilityValue(String(format: "%.1f Prozent", pct))
             }
             .width(min: 120, ideal: 160)
         }
@@ -340,13 +370,17 @@ struct ContentView: View {
         return true
     }
 
-    private func colorForGroup(_ group: FileTypeGroup) -> Color {
-        let palette = Color.MikaPlus.chartPalette
-        let sorted = engine.filteredGroups.sorted { $0.totalBytes > $1.totalBytes }
-        if let index = sorted.firstIndex(where: { $0.id == group.id }), index < palette.count {
-            return palette[index]
+    /// Rangfolge nach Größe — einmal je Neuzeichnen statt einmal je Zeile.
+    private var colorRanks: [UUID: Int] {
+        var ranks: [UUID: Int] = [:]
+        for (i, g) in engine.filteredGroups.sorted(by: { $0.totalBytes > $1.totalBytes }).enumerated() {
+            ranks[g.id] = i
         }
-        return .gray
+        return ranks
+    }
+
+    private func colorForGroup(_ group: FileTypeGroup) -> Color {
+        Color.MikaPlus.chartColor(rank: colorRanks[group.id] ?? Int.max)
     }
 }
 
@@ -367,5 +401,8 @@ private struct StatPill: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
         .background(.secondary.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(value)
     }
 }

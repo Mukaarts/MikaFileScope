@@ -1,6 +1,7 @@
 // MenubarPopoverView.swift
 // MikaFileScope
 
+import AppKit
 import SwiftUI
 
 struct MenubarPopoverView: View {
@@ -70,21 +71,21 @@ struct MenubarPopoverView: View {
             }
 
             HStack(spacing: 16) {
-                miniStat(value: "\(engine.totalFiles)", label: "Files")
+                miniStat(value: "\(engine.filteredTotalFiles)", label: "Files")
                 miniStat(value: formattedSize, label: "Total")
-                miniStat(value: "\(engine.groups.count)", label: "Types")
+                miniStat(value: "\(engine.filteredGroups.count)", label: "Types")
             }
 
-            if !engine.groups.isEmpty {
+            if !engine.filteredGroups.isEmpty {
                 Divider()
                 VStack(alignment: .leading, spacing: 4) {
-                    let topGroups = engine.groups.sorted { $0.totalBytes > $1.totalBytes }.prefix(5)
+                    let topGroups = engine.filteredGroups.sorted { $0.totalBytes > $1.totalBytes }.prefix(5)
                     ForEach(Array(topGroups)) { group in
                         HStack {
                             Text(group.displayExt)
                                 .font(.caption)
                                 .frame(width: 60, alignment: .leading)
-                            ProgressView(value: group.percentage(of: engine.totalSize), total: 100)
+                            ProgressView(value: group.percentage(of: engine.filteredTotalSize), total: 100)
                                 .tint(Color.MikaPlus.tealPrimary)
                             Text(group.formattedSize)
                                 .font(.caption2)
@@ -109,6 +110,16 @@ struct MenubarPopoverView: View {
 
     private var footerView: some View {
         HStack {
+            // Ohne diesen Weg konnte der beworbene „Quick Scan" nichts scannen:
+            // Ein Ordner ließ sich nur im Hauptfenster wählen.
+            Button("Ordner…") {
+                chooseFolder()
+            }
+            .buttonStyle(.plain)
+            .font(.system(size: 11))
+            .foregroundStyle(.secondary)
+            .disabled(engine.isScanning)
+
             Button("Rescan") {
                 engine.rescan()
             }
@@ -128,7 +139,18 @@ struct MenubarPopoverView: View {
         }
     }
 
+    private func chooseFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.message = "Choose a folder to scan"
+        if panel.runModal() == .OK, let url = panel.url {
+            engine.scan(folder: url)
+        }
+    }
+
     private var formattedSize: String {
-        ByteCountFormatter().string(fromByteCount: engine.totalSize)
+        ByteCountFormatter().string(fromByteCount: engine.filteredTotalSize)
     }
 }

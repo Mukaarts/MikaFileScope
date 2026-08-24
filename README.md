@@ -24,6 +24,8 @@ Part of the **Mika+** ecosystem.
 ## Requirements
 
 - macOS 14.0+ (Sonoma)
+- **Apple silicon** — the released build is `arm64` only. Build with
+  `bash scripts/build.sh --universal` for a binary that also runs on Intel Macs.
 - Xcode 15+ / Swift 6.0
 
 ## Build & Run
@@ -48,8 +50,14 @@ open Package.swift
 ## Distribution
 
 ```bash
-# Build .app bundle
+# Build .app bundle (direct distribution, with Sparkle)
 bash scripts/build.sh
+
+# Mac App Store variant: sandboxed, without Sparkle
+bash scripts/build.sh --appstore
+
+# Universal binary (arm64 + x86_64)
+bash scripts/build.sh --universal
 
 # Create DMG (requires: brew install create-dmg)
 bash scripts/create-dmg.sh
@@ -75,4 +83,10 @@ See [`website/README.md`](website/README.md) for deployment and how to regenerat
 
 ## License
 
-Copyright 2025 dauMedia / Mika. All rights reserved.
+**Source Available** — see [`LICENSE`](LICENSE).
+
+Using the app is free, including commercially. Reading the source and building it for
+your own use is explicitly allowed. Redistribution and derived works require written
+permission — this is not an open-source licence.
+
+Copyright 2025 dauMedia / Mika.

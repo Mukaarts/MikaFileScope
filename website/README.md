@@ -60,9 +60,16 @@ Three claims on the page are tied to how the app is actually built. If any of th
 
 | Page says | Verify with |
 |---|---|
+| Source available, not open source | `cat LICENSE` |
 | Apple silicon | `lipo -archs build/Mika+FileScope.app/Contents/MacOS/MikaFileScope` |
 | Not notarized, needs right-click → Open on first launch | `codesign -dv build/Mika+FileScope.app` (currently `Signature=adhoc`) |
 | No network requests except the update check | `grep -rn "URLSession\|https://" Sources/` (currently no hits — network comes from Sparkle only) |
 
 Version number, download link and file size are hard-coded in `index.html` and point at the
-`v2.0.0` GitHub release. Update them when a new version ships.
+`v2.0.0` GitHub release. Update them when a new version ships — four places: the download
+button, the requirements line, the file size, and `softwareVersion` in the JSON-LD block.
+
+`privacy.html` and `imprint.html` are served under `/privacy` and `/imprint` thanks to
+`cleanUrls` in `vercel.json`. **The imprint still contains three placeholders** — address,
+trade register and VAT ID — which must be filled in before the site is considered
+compliant.

@@ -593,3 +593,19 @@ p { margin: 0; }
   }
   .btn:hover, .card:hover { transform: none; }
 }
+
+/* ── Rechtsseiten (Impressum, Datenschutz) ────────────────────────── */
+.legal { max-width: 46rem; padding-top: 7rem; }
+.legal h1 { font-size: clamp(2rem, 4vw, 2.6rem); margin-bottom: .4rem; }
+.legal h2 { font-size: 1.15rem; margin: 2.2rem 0 .6rem; color: var(--text); }
+.legal p { color: var(--muted); line-height: 1.7; margin-bottom: .9rem; }
+.legal a { color: var(--teal-light); }
+.legal__updated { font-size: .85rem; color: var(--muted-dim); margin-bottom: 2rem; }
+.legal pre {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 1rem; overflow-x: auto;
+  font-family: var(--mono); font-size: .82rem; color: var(--text);
+  margin-bottom: 1rem;
+}
+.legal strong { color: var(--teal-light); }
+.footer__legal { margin-top: .4rem; font-size: .85rem; }
