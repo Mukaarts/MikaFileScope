@@ -161,6 +161,46 @@ final class StoreAssetTests: XCTestCase {
         }
     }
 
+    /// Die Altersfreigabe steht auf „kein Netzwerkzugriff“. Wer eine URLSession
+    /// einbaut, macht damit stillschweigend den Fragebogen falsch — und den
+    /// Datenschutz-Eintrag gleich mit.
+    func test_keinNetzwerkzugriffImQuelltext() throws {
+        let quellen = projectRoot.appendingPathComponent("Sources")
+        let dateien = try FileManager.default
+            .contentsOfDirectory(at: quellen, includingPropertiesForKeys: nil)
+            .filter { $0.pathExtension == "swift" }
+
+        for datei in dateien {
+            let inhalt = try String(contentsOf: datei, encoding: .utf8)
+            for verboten in ["URLSession", "WKWebView", "NSURLConnection"] {
+                XCTAssertFalse(
+                    inhalt.contains(verboten),
+                    """
+                    \(datei.lastPathComponent) nennt \(verboten).                     AppStore/ALTERSFREIGABEN.md und der Datenschutz-Eintrag sagen                     beide, dass die App keine Verbindungen herstellt — beides prüfen.
+                    """
+                )
+            }
+        }
+    }
+
+    func test_altersfreigabeIstUeberallDieselbe() throws {
+        let freigaben = try String(
+            contentsOf: appStore.appendingPathComponent("ALTERSFREIGABEN.md"), encoding: .utf8)
+        let grunddaten = try String(
+            contentsOf: appStore.appendingPathComponent("APP_STORE_CONNECT.md"), encoding: .utf8)
+
+        XCTAssertTrue(freigaben.contains("**Ergebnis: 4+**"),
+                      "ALTERSFREIGABEN.md nennt kein Ergebnis")
+        XCTAssertTrue(grunddaten.contains("4+"),
+                      "APP_STORE_CONNECT.md nennt keine Altersfreigabe")
+        // Beide Dateien werden von Hand gepflegt; ein Widerspruch fiele sonst erst
+        // im Formular auf.
+        for stufe in ["9+", "13+", "16+", "18+"] {
+            XCTAssertFalse(grunddaten.contains("Altersfreigabe | \(stufe)"),
+                           "APP_STORE_CONNECT.md sagt \(stufe), ALTERSFREIGABEN.md sagt 4+")
+        }
+    }
+
     func test_beschreibungNenntKeineFalscheMindestversion() throws {
         // Die Beschreibung nennt macOS 14; steht in Package.swift etwas anderes,
         // widersprechen sich Store-Eintrag und Build.

@@ -22,6 +22,8 @@ Apple-Konto oder auf einem fremden Dienst erledigen lässt.
 - [ ] Texte aus `metadata/en-US/` einsetzen, Screenshots aus
       `screenshots/en-US/mac-2880x1800/` in Nummernreihenfolge hochladen.
 - [ ] Datenschutz-Fragebogen: durchgehend **Data Not Collected**.
+- [ ] Altersfreigabe-Fragebogen: alle 24 Kategorien „Nein"/„Nie", Ergebnis **4+**.
+      Antworten und Belege in [ALTERSFREIGABEN.md](ALTERSFREIGABEN.md).
 - [ ] Prüfungshinweise aus [APP_STORE_CONNECT.md](APP_STORE_CONNECT.md) eintragen.
 
 ## Nur für den Direktvertrieb (nicht Store-relevant)

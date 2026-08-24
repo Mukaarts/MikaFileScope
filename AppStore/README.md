@@ -26,7 +26,9 @@ Die Dateinamen folgen der Fastlane-Konvention — ein späterer Wechsel auf
 `fastlane deliver` funktioniert ohne Umbau.
 
 Grunddaten, Kategorien und die Antworten des Datenschutz-Fragebogens stehen in
-[APP_STORE_CONNECT.md](APP_STORE_CONNECT.md).
+[APP_STORE_CONNECT.md](APP_STORE_CONNECT.md), die des Altersfreigabe-Fragebogens in
+[ALTERSFREIGABEN.md](ALTERSFREIGABEN.md) — dort mit Beleg aus dem Code, damit sie nach
+einem Feature-Umbau nachprüfbar bleiben.
 
 ## Sprachen
 

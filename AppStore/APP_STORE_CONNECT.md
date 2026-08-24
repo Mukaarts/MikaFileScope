@@ -16,7 +16,7 @@ Fragebögen.
 | Primäre Kategorie | Dienstprogramme / Utilities |
 | Sekundäre Kategorie | *(leer lassen)* |
 | Preis | Kostenlos |
-| Altersfreigabe | 4+ |
+| Altersfreigabe | 4+ (siehe [ALTERSFREIGABEN.md](ALTERSFREIGABEN.md)) |
 | Copyright | 2025 dauMedia / Mika |
 | Plattform | macOS 14 Sonoma oder neuer, Apple silicon und Intel |
 
@@ -33,6 +33,14 @@ Quelltext — `grep -rn "URLSession" Sources/` liefert nichts.
 
 Die Store-Variante wird ohne Sparkle gebaut (`APPSTORE=1`), enthält also auch keinen
 Update-Kanal, der eine Verbindung aufbauen könnte.
+
+## Altersfreigaben
+
+Der Fragebogen hat 24 Kategorien; jede einzelne wird mit „Nein" bzw. „Nie" beantwortet.
+Das Ergebnis ist **4+**. Die Antworten stehen samt Beleg in
+[ALTERSFREIGABEN.md](ALTERSFREIGABEN.md) — inklusive der einen Frage, die bei einer
+Prüfung aufkommen kann: warum die angezeigten Dateinamen keine „benutzergenerierten
+Inhalte" sind.
 
 ## Prüfungshinweise für Apple (App Review Information)
 
