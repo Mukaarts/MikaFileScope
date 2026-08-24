@@ -3,6 +3,7 @@
 .build-appstore/
 .swiftpm/
 *.xcodeproj
+.xcbuild/
 xcuserdata/
 build/
 installer/

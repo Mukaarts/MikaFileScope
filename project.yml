@@ -1,0 +1,71 @@
+# project.yml — Xcode-Projekt für die Mac-App-Store-Variante
+#
+# Erzeugt mit: xcodegen generate
+#
+# Warum es das gibt: Ein reines SwiftPM-Paket lässt sich in Xcode weder archivieren
+# noch hochladen, und Xcode kann für ein Paket keine Zertifikate oder Provisioning
+# Profiles anlegen. Für den Store braucht es ein App-Target.
+#
+# Warum es NUR den Store abdeckt: Der Direktvertrieb läuft weiter über
+# `scripts/build.sh --release` mit Sparkle. Zwei Wege, zwei Werkzeuge — aber eine
+# einzige Quelle für Code und Version.
+#
+# Die Datei .xcodeproj gehört nicht ins Repository; sie wird aus dieser Datei erzeugt.
+
+name: MikaFileScope
+
+options:
+  bundleIdPrefix: lu.daumedia
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: false
+
+settings:
+  base:
+    # Eine einzige Quelle für Version und Kennung: dieselbe Info.plist, die auch
+    # scripts/build.sh verwendet. Sonst driften Store- und Direktvariante auseinander.
+    INFOPLIST_FILE: Resources/Info.plist
+    PRODUCT_BUNDLE_IDENTIFIER: lu.daumedia.mikafilescope
+    # Muss zu CFBundleExecutable in Resources/Info.plist passen, die beide Bauwege
+    # gemeinsam nutzen. Der angezeigte Name kommt aus CFBundleName/CFBundleDisplayName
+    # und lautet weiterhin "Mika+FileScope".
+    PRODUCT_NAME: MikaFileScope
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    # Ohne diese beiden landet das Produkt beim Archivieren unter
+    # Products/usr/local/bin statt Products/Applications. Xcode hält das Archiv dann
+    # für ein "Generic Xcode Archive" und bietet beim Verteilen nur "Custom" an —
+    # nicht "App Store Connect".
+    INSTALL_PATH: "$(LOCAL_APPS_DIR)"
+    SKIP_INSTALL: NO
+    SWIFT_STRICT_CONCURRENCY: complete
+    # Universelles Binary, damit die Store-Fassung auch auf Intel-Macs läuft.
+    ARCHS: "arm64 x86_64"
+    ONLY_ACTIVE_ARCH: NO
+
+targets:
+  MikaFileScope:
+    type: application
+    platform: macOS
+
+    sources:
+      - path: Sources
+      # Ressourcen laufen bei XcodeGen ebenfalls über `sources`, nur mit anderer
+      # Bauphase — einen eigenen `resources:`-Schlüssel gibt es nicht.
+      - path: Resources/AppIcon.icns
+        buildPhase: resources
+
+    settings:
+      base:
+        # Schaltet Sparkle im Code ab. Die Store-Fassung darf keinen eigenen
+        # Update-Mechanismus enthalten — Apple lehnt das ab.
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: APPSTORE
+        CODE_SIGN_ENTITLEMENTS: Resources/MikaFileScope-AppStore.entitlements
+        CODE_SIGN_STYLE: Automatic
+        # Team der Developer ID. Falls die App unter dem anderen Team (8C9HV4CHBN)
+        # erscheinen soll, hier ändern — Xcode zieht Zertifikat und Profil dann dafür.
+        DEVELOPMENT_TEAM: CWJM4J4HFN
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        COMBINE_HIDPI_IMAGES: YES
