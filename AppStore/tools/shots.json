@@ -1,0 +1,72 @@
+{
+  "_comment": "Headline, subline and layout per screenshot and locale. compose.swift reads the raw capture from screenshots/raw/<lang>/ and fails if it is missing — no silent fallback to another language, that would put English captures into a translated store. 'theme' picks the ground (light = pale mint, dark = brand gradient), 'layout' the composition (hero, text-top, frame-top, highlight). 'card' describes the magnified crop used by the highlight layout: 'rect' is [left, top, right, bottom] normalised to 0…1 of the capture, 'scale' how much it grows, 'y' overrides the card centre normalised to canvas height.",
+  "shots": [
+    {
+      "file": "01_list",
+      "theme": "light",
+      "layout": "highlight",
+      "card": {
+        "rect": [
+          0.01,
+          0.079,
+          0.198,
+          0.143
+        ],
+        "scale": 2.9
+      }
+    },
+    {
+      "file": "02_charts",
+      "theme": "dark",
+      "layout": "hero"
+    },
+    {
+      "file": "03_timeline",
+      "theme": "light",
+      "layout": "frame-top"
+    },
+    {
+      "file": "04_duplicates",
+      "theme": "dark",
+      "layout": "highlight",
+      "card": {
+        "rect": [
+          0.269,
+          0.256,
+          0.731,
+          0.33
+        ],
+        "scale": 1.75
+      }
+    },
+    {
+      "file": "05_videos",
+      "theme": "light",
+      "layout": "text-top"
+    }
+  ],
+  "texts": {
+    "en": {
+      "01_list": {
+        "headline": "Where did the space go?",
+        "subline": "Every extension with count, size and share of the whole — sortable by any column."
+      },
+      "02_charts": {
+        "headline": "The whole folder at a glance",
+        "subline": "Donut and bars: the eight largest types, everything else collected into one."
+      },
+      "03_timeline": {
+        "headline": "What is just lying there",
+        "subline": "Six age buckets, from today to over a year — split by count and by volume."
+      },
+      "04_duplicates": {
+        "headline": "Stored twice",
+        "subline": "SHA-256 finds what is truly identical. Nothing gets deleted — that stays your call."
+      },
+      "05_videos": {
+        "headline": "Only what matters",
+        "subline": "Seven categories narrow the view. Table, charts and export follow along."
+      }
+    }
+  }
+}

@@ -48,6 +48,8 @@ struct HistogramView: View {
                 }
             }
             .frame(height: 220)
+            .accessibilityLabel("Dateianzahl nach Alter")
+            .accessibilityValue(dateBuckets.map { "\($0.label): \($0.fileCount)" }.joined(separator: ", "))
         }
     }
 
@@ -77,15 +79,15 @@ struct HistogramView: View {
                 }
             }
             .frame(height: 220)
+            .accessibilityLabel("Gesamtgröße nach Alter")
+            .accessibilityValue(dateBuckets.map { "\($0.label): \(ByteCountFormatter().string(fromByteCount: $0.totalBytes))" }.joined(separator: ", "))
         }
     }
 
+    /// Verlauf von der Markenfarbe (jung) zu entsättigtem Grau (alt).
+    /// Die Werte stammen aus `MikaPlusColors` — zuvor standen sie hier ein zweites Mal
+    /// fest im Code, sodass eine Änderung der Markenfarbe die Zeitachse nicht erreichte.
     private func gradientColor(for sortIndex: Int) -> Color {
-        let progress = Double(sortIndex) / 6.0
-        return Color(
-            hue: 148.0 / 360.0,
-            saturation: 0.70 * (1.0 - progress * 0.6),
-            brightness: 0.75 * (1.0 - progress * 0.3)
-        )
+        Color.MikaPlus.ageColor(step: sortIndex, of: 6)
     }
 }

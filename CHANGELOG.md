@@ -7,6 +7,49 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Mac App Store variant: `bash scripts/build.sh --appstore` builds a sandboxed bundle
+  without Sparkle (`APPSTORE=1` in `Package.swift` drops the dependency entirely)
+- Security-scoped bookmark of the last scanned folder — “Rescan” now survives a restart
+- Universal binary via `bash scripts/build.sh --universal` (arm64 + x86_64)
+- Cancel button for both the folder scan and the duplicate search
+- Real progress percentage in the duplicate search, and a note when files were skipped
+  for being below the 1 KB threshold
+- Warning when files could not be read during a scan — the totals are then incomplete
+- Folder picker in the menu bar popover, so the quick scan can actually scan
+- Accessibility labels for the table, both charts and the age timeline
+- `LICENSE` (Source Available), privacy policy and imprint on the website
+- 28 tests covering the update channel, file categories, age buckets and both exporters
+- CI workflow: builds both variants, verifies the App Store build contains no Sparkle
+
+### Changed
+- Packages (`.app`, `.rtfd`, …) count as one object instead of exposing their contents
+- Symbolic links are no longer counted as separate files
+- Hardlinks are recognised as the same data and no longer reported as duplicates
+- The duplicate finder and the menu bar summary now follow the category filter
+- Chart palette starts at the brand colour; grey is reserved for the “Other” bucket
+- The category filter resets when a different folder is scanned
+- `.ts` belongs to Videos only (was in Videos *and* Code)
+- `scannedAt` in the JSON export is the scan time, not the export time
+- Percentages in the JSON export no longer carry floating-point artefacts
+- `CFBundleVersion` raised to 2 — Sparkle compares it, and it had been stuck at 1
+- Update feed points at `main`; `appcast.xml` carries a signed entry for v2.0.0
+- `build.sh` verifies the signature, drops `--deep`, and cleans a stale build cache
+
+### Fixed
+- The update feed was empty, so no installed copy could ever learn about a new version
+- The feed URL could be redirected by any local process writing to user defaults
+- A failed JSON export silently wrote `{}` instead of reporting the error
+- Read errors during a scan were swallowed, leaving totals quietly too low
+- Two scans could run at once and overwrite each other's results
+
+### Removed
+- Grey as a colour for the ninth and further file types in the table
+- Marketing landing page in `website/` — static HTML/CSS, no build step, deployable on Vercel with
+  root directory `website`
+- Real app screenshots (List, Charts, Timeline, Duplicates) captured in Dark Mode and served as WebP
+- `scripts/GenerateOGImage.swift` — renders the 1200×630 social preview from the app icon via AppKit
+- Landing page states the ad-hoc signature and the resulting first-launch step explicitly, plus the
+  Apple silicon requirement
 - Toggle to include/exclude hidden files (dotfiles, .DS_Store, etc.) in scans
 - Auto-rescan when hidden files toggle is changed
 - File category filter (All, Images, Documents, Videos, Audio, Code, Archives, Other)

@@ -15,9 +15,11 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>2.0.0</string>
+    <string>2.1.0</string>
     <key>CFBundleVersion</key>
-    <string>1</string>
+    <string>2.1.0</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.utilities</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>NSHighResolutionCapable</key>
@@ -25,7 +27,7 @@
     <key>NSHumanReadableCopyright</key>
     <string>Copyright 2025 dauMedia / Mika. All rights reserved.</string>
     <key>SUFeedURL</key>
-    <string>https://raw.githubusercontent.com/daumedia/MikaFileScope/master/appcast.xml</string>
+    <string>https://raw.githubusercontent.com/daumedia/MikaFileScope/main/appcast.xml</string>
     <key>SUPublicEDKey</key>
     <string>eauiHgP4PM9ynLekAmo3URrX3ye3HW7D53xOZa5AeYI=</string>
 </dict>

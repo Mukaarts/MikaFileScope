@@ -43,12 +43,58 @@ extension Color {
         static let textSecondary = Color(nsColor: NSColor.MikaPlus.textSecondary)
         static let destructive   = Color(nsColor: NSColor.MikaPlus.destructive)
 
-        /// 8-color chart palette derived from teal primary via hue rotation (45° increments)
-        static let chartPalette: [Color] = (0..<8).map { i in
-            Color(
-                hue: (148.0 / 360.0) + Double(i) * (45.0 / 360.0),
-                saturation: 0.70,
-                brightness: 0.75
+        /// Diagrammpalette, abgeleitet aus der Markenfarbe.
+        ///
+        /// Der erste Eintrag **ist** `tealPrimary` (#1D9E75) — zuvor begann die Palette
+        /// bei 148° mit abweichender Sättigung und Helligkeit und traf die Markenfarbe
+        /// damit nicht. Die übrigen sieben rotieren im Farbkreis um je 45°, mit den
+        /// Werten der Markenfarbe für Sättigung und Helligkeit.
+        static let chartPalette: [Color] = {
+            let base = NSColor.MikaPlus.tealPrimary.usingColorSpace(.deviceRGB)
+            let hue = Double(base?.hueComponent ?? 0.447)
+            let sat = Double(base?.saturationComponent ?? 0.82)
+            let bri = Double(base?.brightnessComponent ?? 0.62)
+            return (0..<8).map { i in
+                Color(
+                    hue: (hue + Double(i) * (45.0 / 360.0)).truncatingRemainder(dividingBy: 1.0),
+                    saturation: sat,
+                    brightness: bri
+                )
+            }
+        }()
+
+        /// Farbe für ein Altersfenster: je älter, desto entsättigter und dunkler.
+        /// Einzige Quelle für den Verlauf der Zeitachse.
+        static func ageColor(step: Int, of total: Int) -> Color {
+            let base = NSColor.MikaPlus.tealPrimary.usingColorSpace(.deviceRGB)
+            let progress = total > 0 ? Double(step) / Double(total) : 0
+            return Color(
+                hue: Double(base?.hueComponent ?? 0.447),
+                saturation: Double(base?.saturationComponent ?? 0.82) * (1.0 - progress * 0.6),
+                brightness: Double(base?.brightnessComponent ?? 0.62) * (1.0 - progress * 0.3) + progress * 0.15
+            )
+        }
+
+        /// Farbe für einen Rang in der Größenreihenfolge.
+        ///
+        /// Jenseits der Palette wird weiter rotiert statt auf Grau auszuweichen: Grau
+        /// ist in den Diagrammen der Sammelposten „Other" und darf nicht zugleich
+        /// „keine Farbe mehr übrig" bedeuten.
+        static func chartColor(rank: Int) -> Color {
+            guard rank >= 0, rank != Int.max else { return .gray }
+            if rank < chartPalette.count { return chartPalette[rank] }
+            let base = NSColor.MikaPlus.tealPrimary.usingColorSpace(.deviceRGB)
+            let hue = Double(base?.hueComponent ?? 0.447)
+            let sat = Double(base?.saturationComponent ?? 0.82)
+            let bri = Double(base?.brightnessComponent ?? 0.62)
+            // Zwischentöne: versetzt um die halbe Schrittweite, leicht abgedunkelt.
+            let round = rank / chartPalette.count
+            let offset = Double(rank % chartPalette.count) * (45.0 / 360.0)
+                + Double(round) * (22.5 / 360.0)
+            return Color(
+                hue: (hue + offset).truncatingRemainder(dividingBy: 1.0),
+                saturation: max(0.35, sat - Double(round) * 0.12),
+                brightness: min(0.92, bri + Double(round) * 0.08)
             )
         }
     }

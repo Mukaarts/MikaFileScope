@@ -47,8 +47,13 @@ struct DuplicateResultView: View {
             ProgressView(value: detector.progress)
                 .progressViewStyle(.linear)
                 .tint(Color.MikaPlus.tealPrimary)
-            Text("Scanning for duplicates...")
+                .accessibilityLabel("Fortschritt der Duplikatsuche")
+                .accessibilityValue("\(Int(detector.progress * 100)) Prozent")
+            Text("Scanning for duplicates… \(Int(detector.progress * 100)) %")
                 .foregroundStyle(.secondary)
+                .monospacedDigit()
+            Button("Abbrechen") { detector.cancel() }
+                .buttonStyle(.bordered)
         }
         .padding(40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -59,20 +64,40 @@ struct DuplicateResultView: View {
             Image(systemName: "checkmark.circle")
                 .font(.system(size: 40))
                 .foregroundStyle(Color.MikaPlus.tealPrimary)
+                .accessibilityHidden(true)
             Text("No duplicate files found")
                 .font(.title3)
+                .foregroundStyle(.secondary)
+            skippedHint
+            Text("FileScope does not delete files.")
+                .font(.caption)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private var resultsList: some View {
-        VStack(spacing: 0) {
-            Text("FileScope does not delete files. Use Reveal in Finder to review manually.")
+    /// Macht sichtbar, dass kleine Dateien gar nicht geprüft wurden — sonst liest sich
+    /// „keine Duplikate gefunden" als „es gibt keine".
+    @ViewBuilder
+    private var skippedHint: some View {
+        if detector.skippedTooSmall > 0 {
+            Text("\(detector.skippedTooSmall) Datei(en) unter \(ByteCountFormatter().string(fromByteCount: DuplicateDetector.minimumSize)) wurden nicht verglichen")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .padding(.horizontal)
-                .padding(.top, 8)
+                .multilineTextAlignment(.center)
+        }
+    }
+
+    private var resultsList: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: 4) {
+                Text("FileScope does not delete files. Use Reveal in Finder to review manually.")
+                skippedHint
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal)
+            .padding(.top, 8)
 
             List {
                 ForEach(detector.duplicateGroups) { group in

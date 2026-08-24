@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Mika+FileScope</title>
+<meta name="description" content="What Mika+FileScope does and does not collect. Short answer: nothing leaves your Mac except an update check.">
+<link rel="canonical" href="https://filescope.daumedia.lu/privacy">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a class="nav__brand" href="/">
+      <img src="/assets/icon.png" alt="" width="32" height="32" class="nav__icon">
+      <span>Mika<span class="plus">+</span>FileScope</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/imprint">Imprint</a>
+      <a href="https://github.com/daumedia/MikaFileScope">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="section wrap legal">
+  <h1>Privacy Policy</h1>
+  <p class="legal__updated">Last updated: 24 August 2026</p>
+
+  <h2>The short version</h2>
+  <p>
+    Mika+FileScope does not collect anything. There is no account, no analytics and no
+    telemetry. Everything the app computes about your files stays in memory on your Mac
+    and is gone when you quit it.
+  </p>
+
+  <h2>What the app reads</h2>
+  <p>
+    When you pick a folder, the app reads the file names, paths, sizes and modification
+    dates inside it. The duplicate finder additionally reads file contents in order to
+    hash them; each 1&nbsp;MB block is discarded immediately after hashing. None of this
+    is stored, and none of it is transmitted.
+  </p>
+  <p>
+    The only value the app keeps between launches is whether the menu bar icon is
+    switched on, plus — in the Mac App Store version — a security-scoped bookmark of the
+    last folder you scanned, so that “Rescan” still works after a restart.
+  </p>
+
+  <h2>The one network connection</h2>
+  <p>
+    The direct-download version checks for updates through
+    <a href="https://sparkle-project.org">Sparkle</a>. That request goes to GitHub and
+    transmits what any HTTP request transmits:
+  </p>
+  <pre><code>GET /appcast.xml
+Accept-Language: &lt;your system language&gt;
+User-Agent: Mika+FileScope/&lt;version&gt; Sparkle/&lt;version&gt;</code></pre>
+  <p>
+    So: your IP address, your system language, the app version and the time of the
+    request. No file names, no paths, no scan data — the request has no body at all.
+    System profiling is switched off. The Mac App Store version has no update check of
+    its own; Apple handles updates there.
+  </p>
+  <p>
+    GitHub acts as the host of that file. Their privacy statement applies to the request:
+    <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub General Privacy Statement</a>.
+  </p>
+
+  <h2>This website</h2>
+  <p>
+    The site is hosted by Vercel Inc. and sets no cookies, loads no fonts from third
+    parties and embeds no trackers. Vercel processes the usual server access data —
+    IP address, user agent, referrer — to deliver the page. See the
+    <a href="https://vercel.com/legal/privacy-policy">Vercel Privacy Policy</a>.
+  </p>
+
+  <h2>Your rights</h2>
+  <p>
+    Since no personal data is collected or stored by us, there is nothing to access,
+    correct or delete on our side. If you have a question anyway, write to
+    <a href="mailto:hello@daumedia.lu">hello@daumedia.lu</a>.
+  </p>
+
+  <h2>Verifying this</h2>
+  <p>
+    You do not have to take our word for it. The source is readable, and the claim that
+    the app makes no network requests of its own is one command away:
+  </p>
+  <pre><code>grep -rn "URLSession\|https://" Sources/</code></pre>
+  <p>It returns nothing. The only network code comes from Sparkle.</p>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>© 2025 dauMedia / Mika · <a href="/imprint">Imprint</a> · <a href="/privacy">Privacy</a></p>
+  </div>
+</footer>
+</body>
+</html>

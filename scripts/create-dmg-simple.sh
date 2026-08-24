@@ -14,10 +14,22 @@ if [ ! -d "$APP_BUNDLE" ]; then
 fi
 
 VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP_BUNDLE/Contents/Info.plist" 2>/dev/null || echo "1.0")
-DMG_NAME="${APP_NAME}-v${VERSION}.dmg"
+BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$APP_BUNDLE/Contents/Info.plist" 2>/dev/null || echo "0")
+# Die Build-Nummer nur anhängen, wenn sie sich von der Kurzversion unterscheidet —
+# sonst hieße das Paket "…-v2.1.0-2.1.0.dmg". Zwei Artefakte mit gleichem Namen und
+# verschiedenem Inhalt bleiben damit weiterhin ausgeschlossen.
+if [ "$BUILD" = "$VERSION" ]; then
+    DMG_NAME="${APP_NAME}-v${VERSION}.dmg"
+else
+    DMG_NAME="${APP_NAME}-v${VERSION}-${BUILD}.dmg"
+fi
 DMG_PATH="$INSTALLER_DIR/$DMG_NAME"
 
 mkdir -p "$INSTALLER_DIR"
+if [ -f "$DMG_PATH" ]; then
+    echo "HINWEIS: $DMG_NAME existiert bereits und wird ersetzt." >&2
+    echo "         Vorherige Prüfsumme: $(shasum -a 256 "$DMG_PATH" | cut -c1-16)…" >&2
+fi
 rm -f "$DMG_PATH"
 
 echo "==> Creating DMG: $DMG_NAME"

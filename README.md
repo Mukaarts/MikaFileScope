@@ -24,6 +24,8 @@ Part of the **Mika+** ecosystem.
 ## Requirements
 
 - macOS 14.0+ (Sonoma)
+- **Apple silicon** — the released build is `arm64` only. Build with
+  `bash scripts/build.sh --universal` for a binary that also runs on Intel Macs.
 - Xcode 15+ / Swift 6.0
 
 ## Build & Run
@@ -45,11 +47,49 @@ Or open in Xcode:
 open Package.swift
 ```
 
+> **Set the run destination to “My Mac”.** This is a macOS-only package, but SwiftPM's
+> `platforms:` declares a *minimum version*, not a restriction — so Xcode still offers
+> iOS destinations. Building for one fails in Sparkle, which ships macOS slices only:
+>
+> ```
+> While building for iOS, no library for this platform was found in Sparkle.xcframework
+> ```
+>
+> Nothing is wrong with the project; switch the destination in the toolbar. If Xcode
+> keeps reverting to iOS, delete the project's DerivedData folder — it caches the last
+> destination.
+
 ## Distribution
 
+### Mac App Store
+
+The store variant needs an Xcode project — a plain SwiftPM package cannot be archived,
+and Xcode will not manage certificates for one. It is generated, not committed:
+
 ```bash
-# Build .app bundle
+brew install xcodegen   # once
+xcodegen generate       # creates MikaFileScope.xcodeproj from project.yml
+open MikaFileScope.xcodeproj
+```
+
+In Xcode: select the target, *Signing & Capabilities*, tick **Automatically manage
+signing** and pick the team. Xcode then creates the distribution certificate and the
+provisioning profile. Product → Archive → Distribute App → App Store Connect.
+
+Both paths share `Sources/` and `Resources/Info.plist`, so version and identifier only
+exist once.
+
+### Direct distribution
+
+```bash
+# Build .app bundle (direct distribution, with Sparkle)
 bash scripts/build.sh
+
+# Mac App Store variant: sandboxed, without Sparkle
+bash scripts/build.sh --appstore
+
+# Universal binary (arm64 + x86_64)
+bash scripts/build.sh --universal
 
 # Create DMG (requires: brew install create-dmg)
 bash scripts/create-dmg.sh
@@ -60,6 +100,25 @@ bash scripts/create-dmg-simple.sh
 
 Automated releases via GitHub Actions on `v*` tags.
 
+## Website
+
+**[filescope.daumedia.lu](https://filescope.daumedia.lu)**
+
+The marketing landing page lives in [`website/`](website/) — static HTML, CSS and a little vanilla
+JS, no build step. Deployed on Vercel with the project's **Root Directory** set to `website`.
+
+```bash
+cd website && python3 -m http.server 8080   # local preview
+```
+
+See [`website/README.md`](website/README.md) for deployment and how to regenerate the assets.
+
 ## License
 
-Copyright 2025 dauMedia / Mika. All rights reserved.
+**Source Available** — see [`LICENSE`](LICENSE).
+
+Using the app is free, including commercially. Reading the source and building it for
+your own use is explicitly allowed. Redistribution and derived works require written
+permission — this is not an open-source licence.
+
+Copyright 2025 dauMedia / Mika.

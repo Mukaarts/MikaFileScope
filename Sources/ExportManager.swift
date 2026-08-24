@@ -14,15 +14,21 @@ enum ExportManager {
         save(content: content, defaultName: "FileScope_\(folderName).csv", allowedType: .commaSeparatedText)
     }
 
-    static func exportJSON(groups: [FileTypeGroup], totalFiles: Int, totalSize: Int64, folderURL: URL?) {
-        let content = generateJSON(groups: groups, totalFiles: totalFiles, totalSize: totalSize, folderURL: folderURL)
+    static func exportJSON(groups: [FileTypeGroup], totalFiles: Int, totalSize: Int64, folderURL: URL?, scannedAt: Date?) {
+        guard let content = generateJSON(groups: groups, totalFiles: totalFiles, totalSize: totalSize,
+                                         folderURL: folderURL, scannedAt: scannedAt) else {
+            // Zuvor wurde in diesem Fall "{}" gespeichert — der Nutzer hielt eine leere
+            // Datei für einen gelungenen Export.
+            showError("Der Export konnte nicht erzeugt werden.")
+            return
+        }
         let folderName = folderURL?.lastPathComponent ?? "scan"
         save(content: content, defaultName: "FileScope_\(folderName).json", allowedType: .json)
     }
 
     // MARK: - CSV
 
-    private static func generateCSV(groups: [FileTypeGroup], totalSize: Int64) -> String {
+    static func generateCSV(groups: [FileTypeGroup], totalSize: Int64) -> String {
         var csv = "Extension,Count,Size (Bytes),Size (Human),Percentage\n"
         for group in groups {
             let pct = String(format: "%.1f", group.percentage(of: totalSize))
@@ -34,9 +40,9 @@ enum ExportManager {
 
     // MARK: - JSON
 
-    private static func generateJSON(groups: [FileTypeGroup], totalFiles: Int, totalSize: Int64, folderURL: URL?) -> String {
+    static func generateJSON(groups: [FileTypeGroup], totalFiles: Int, totalSize: Int64,
+                             folderURL: URL?, scannedAt: Date?) -> String? {
         let formatter = ISO8601DateFormatter()
-        let now = formatter.string(from: Date())
 
         let groupEntries = groups.map { group -> [String: Any] in
             [
@@ -44,23 +50,41 @@ enum ExportManager {
                 "count": group.count,
                 "sizeBytes": group.totalBytes,
                 "sizeHuman": group.formattedSize,
-                "percentage": round(group.percentage(of: totalSize) * 10) / 10
+                // Als Dezimalzahl, nicht als Double: `round(x * 10) / 10` liefert den
+                // nächstliegenden Double zu 5.1 — und JSONSerialization schrieb den in
+                // voller Genauigkeit als 5.0999999999999996 aus.
+                "percentage": decimalPercentage(group.percentage(of: totalSize))
             ]
         }
 
         let root: [String: Any] = [
             "scannedFolder": folderURL?.path ?? "",
-            "scannedAt": now,
+            // Zeitpunkt des Scans, nicht des Exports.
+            "scannedAt": scannedAt.map { formatter.string(from: $0) } ?? "",
             "totalFiles": totalFiles,
             "totalSizeBytes": totalSize,
             "groups": groupEntries
         ]
 
-        guard let data = try? JSONSerialization.data(withJSONObject: root, options: [.prettyPrinted, .sortedKeys]),
+        guard JSONSerialization.isValidJSONObject(root),
+              let data = try? JSONSerialization.data(withJSONObject: root, options: [.prettyPrinted, .sortedKeys]),
               let json = String(data: data, encoding: .utf8) else {
-            return "{}"
+            return nil
         }
         return json
+    }
+
+    /// Anteil mit genau einer Nachkommastelle, ohne Gleitkomma-Artefakte in der Ausgabe.
+    static func decimalPercentage(_ value: Double) -> NSDecimalNumber {
+        NSDecimalNumber(string: String(format: "%.1f", value))
+    }
+
+    private static func showError(_ text: String) {
+        let alert = NSAlert()
+        alert.messageText = "Export Failed"
+        alert.informativeText = text
+        alert.alertStyle = .warning
+        alert.runModal()
     }
 
     // MARK: - Save
@@ -75,11 +99,7 @@ enum ExportManager {
         do {
             try content.write(to: url, atomically: true, encoding: .utf8)
         } catch {
-            let alert = NSAlert()
-            alert.messageText = "Export Failed"
-            alert.informativeText = error.localizedDescription
-            alert.alertStyle = .warning
-            alert.runModal()
+            showError(error.localizedDescription)
         }
     }
 }

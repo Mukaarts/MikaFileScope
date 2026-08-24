@@ -24,7 +24,6 @@ struct ChartView: View {
 
     private var chartData: [ChartItem] {
         let sorted = groups.sorted { $0.totalBytes > $1.totalBytes }
-        let palette = Color.MikaPlus.chartPalette
         let top = sorted.prefix(8)
         let rest = sorted.dropFirst(8)
 
@@ -34,7 +33,7 @@ struct ChartView: View {
                 label: group.displayExt,
                 bytes: group.totalBytes,
                 count: group.count,
-                color: palette[i]
+                color: Color.MikaPlus.chartColor(rank: i)
             )
         }
 
@@ -83,6 +82,8 @@ struct ChartView: View {
                     .cornerRadius(4)
                 }
                 .frame(width: 260, height: 260)
+                .accessibilityLabel("Verteilung nach Größe")
+                .accessibilityValue(chartData.map { "\($0.label): \($0.formattedSize)" }.joined(separator: ", "))
 
                 legend
             }
@@ -138,6 +139,8 @@ struct ChartView: View {
                 }
             }
             .frame(height: CGFloat(chartData.count) * 36 + 20)
+            .accessibilityLabel("Größte Dateitypen nach Größe")
+            .accessibilityValue(chartData.map { "\($0.label): \($0.formattedSize)" }.joined(separator: ", "))
         }
     }
 }

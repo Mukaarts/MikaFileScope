@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Store-Variante: Sandbox ist Pflicht.
+         Der Scanner braucht nur Lesezugriff auf das, was der Nutzer ausdrücklich
+         auswählt — per Dialog oder Drag-and-drop. Schreibrechte entstehen allein
+         über den Speichern-Dialog beim Export, den die Powerbox erteilt. -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    <key>com.apple.security.files.user-selected.read-only</key>
+    <true/>
+    <!-- Für „Rescan" nach einem Neustart: der gewählte Ordner wird als
+         Security-Scoped Bookmark gespeichert. -->
+    <key>com.apple.security.files.bookmarks.app-scope</key>
+    <true/>
+</dict>
+</plist>

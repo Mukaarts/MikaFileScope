@@ -35,21 +35,24 @@ enum FileCategory: String, CaseIterable, Identifiable, Sendable {
         case .documents: ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf", "odt", "ods", "odp", "pages", "numbers", "keynote", "csv", "md", "epub"]
         case .videos: ["mp4", "mov", "avi", "mkv", "wmv", "flv", "webm", "m4v", "mpg", "mpeg", "3gp", "ts"]
         case .audio: ["mp3", "wav", "aac", "flac", "ogg", "wma", "m4a", "aiff", "aif", "opus", "mid", "midi"]
-        case .code: ["swift", "py", "js", "ts", "tsx", "jsx", "html", "css", "scss", "json", "xml", "yaml", "yml", "sh", "bash", "zsh", "rb", "go", "rs", "c", "cpp", "h", "hpp", "java", "kt", "m", "mm", "sql", "r", "php", "dart", "lua", "toml"]
+        case .code: ["swift", "py", "js", "mts", "cts", "tsx", "jsx", "html", "css", "scss", "json", "xml", "yaml", "yml", "sh", "bash", "zsh", "rb", "go", "rs", "c", "cpp", "h", "hpp", "java", "kt", "m", "mm", "sql", "r", "php", "dart", "lua", "toml"]
         case .archives: ["zip", "tar", "gz", "bz2", "xz", "7z", "rar", "dmg", "iso", "pkg", "deb", "rpm", "jar", "war"]
         case .other: nil
         }
     }
+
+    /// Alle benannten Endungen, einmal berechnet. Zuvor entstand diese Menge bei
+    /// **jedem** Aufruf neu — also je Tabellenzeile und je Neuzeichnen.
+    private static let allKnownExtensions: Set<String> = FileCategory.allCases
+        .compactMap(\.extensions)
+        .reduce(into: Set<String>()) { $0.formUnion($1) }
 
     func matches(ext: String) -> Bool {
         switch self {
         case .all:
             return true
         case .other:
-            let allKnown = FileCategory.allCases
-                .compactMap(\.extensions)
-                .reduce(into: Set<String>()) { $0.formUnion($1) }
-            return !allKnown.contains(ext)
+            return !FileCategory.allKnownExtensions.contains(ext)
         default:
             return extensions?.contains(ext) ?? false
         }
