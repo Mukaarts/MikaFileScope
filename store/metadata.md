@@ -133,17 +133,23 @@ Quelltext — `grep -rn "URLSession" Sources/` liefert nichts.
 ## Screenshots
 
 In `store/screenshots/`, alle 2880×1800, JPEG ohne Alpha-Kanal. Sie sind gestaltet,
-nicht nur abfotografiert: Überschrift, Unterzeile, Markenverlauf und Punktraster wie im
-OG-Bild der Website. Erzeugt mit `swift scripts/GenerateStoreScreenshots.swift <ordner>`
-— die Texte stehen im Skript und lassen sich dort ändern.
+nicht nur abfotografiert. Jedes Bild hat denselben Aufbau: heller Grund mit einem Hauch
+der Markenfarbe, darüber eine sehr große Überschrift, darunter das Fenster — groß und
+unten angeschnitten — und davor eine Karte mit der Kennzahl, die im Fenster steht.
 
-| Datei | Zeigt |
-|---|---|
-| `1-liste.jpg` | „Wo ist der Platz geblieben?" — Aufschlüsselung nach Dateityp |
-| `2-diagramme.jpg` | „Auf einen Blick" — Ring- und Balkendiagramm |
-| `3-zeitachse.jpg` | „Was liegt hier nur herum?" — Altersverteilung |
-| `4-duplikate.jpg` | „Doppelt gespeichert" — Duplikatsuche |
-| `5-videos.jpg` | „Nur das, was zählt" — Kategoriefilter |
+Die Kennzahlen sind aus der jeweiligen Aufnahme abgelesen, nicht ausgedacht. Wer den
+Demo-Ordner ändert, muss sie im Skript nachziehen.
+
+| Datei | Überschrift | Kennzahl |
+|---|---|---|
+| `1-liste.jpg` | Wo ist der Platz geblieben? | 4,17 GB in 18 Dateien |
+| `2-diagramme.jpg` | Auf einen Blick | 59,5 % entfallen auf .MOV |
+| `3-zeitachse.jpg` | Was hier nur herumliegt | 6 Altersstufen |
+| `4-duplikate.jpg` | Doppelt gespeichert | 8,6 MB wiedergewinnbar |
+| `5-videos.jpg` | Nur das, was zählt | 3,4 GB in 3 Videodateien |
+
+Erzeugt mit `swift scripts/GenerateStoreScreenshots.swift <ordner-mit-rohaufnahmen>`;
+Überschriften und Kennzahlen stehen oben im Skript.
 
 Neu erzeugen lassen sie sich mit `bash scripts/make-demo-folder.sh` — der Ordner, der
 darauf zu sehen ist, entsteht dabei identisch. Wichtig, damit die Aufnahmen bei der
