@@ -14,7 +14,18 @@ open Package.swift   # Open in Xcode
 ## Platform
 
 - macOS 14+ (Sonoma), Swift 6.0, Swift Package Manager
-- No .xcodeproj — SPM only with `path: "Sources"` (flat structure)
+- SPM mit `path: "Sources"` (flache Struktur) für Entwicklung und Direktvertrieb
+- **`project.yml` + XcodeGen** erzeugt zusätzlich ein Xcode-Projekt für den Mac App
+  Store: `xcodegen generate`. Das `.xcodeproj` selbst ist nicht versioniert — es
+  entsteht aus `project.yml`. Nötig, weil ein reines SwiftPM-Paket sich nicht
+  archivieren lässt und Xcode dafür keine Zertifikate verwalten kann
+- **Eine Quelle für beide Wege:** Beide nutzen `Sources/` und `Resources/Info.plist`.
+  `PRODUCT_NAME` muss deshalb `MikaFileScope` lauten — so heißt `CFBundleExecutable`
+  in der geteilten Plist. Der Anzeigename bleibt „Mika+FileScope"
+- **In Xcode muss die Run-Destination „My Mac" sein.** `platforms:` ist in SwiftPM eine
+  Mindestversion, keine Beschränkung; Xcode bietet trotzdem iOS an. Ein iOS-Build
+  scheitert in `Sparkle.xcframework`, das nur macOS-Slices enthält — kein Projektfehler,
+  sondern die falsche Zielwahl
 
 ## Architecture
 
