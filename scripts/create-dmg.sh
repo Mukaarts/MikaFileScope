@@ -29,7 +29,14 @@ fi
 # Read version from Info.plist
 VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP_BUNDLE/Contents/Info.plist" 2>/dev/null || echo "1.0")
 BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$APP_BUNDLE/Contents/Info.plist" 2>/dev/null || echo "0")
-DMG_NAME="${APP_NAME}-v${VERSION}-${BUILD}.dmg"
+# Die Build-Nummer nur anhängen, wenn sie sich von der Kurzversion unterscheidet —
+# sonst hieße das Paket "…-v2.1.0-2.1.0.dmg". Zwei Artefakte mit gleichem Namen und
+# verschiedenem Inhalt bleiben damit weiterhin ausgeschlossen.
+if [ "$BUILD" = "$VERSION" ]; then
+    DMG_NAME="${APP_NAME}-v${VERSION}.dmg"
+else
+    DMG_NAME="${APP_NAME}-v${VERSION}-${BUILD}.dmg"
+fi
 DMG_PATH="$INSTALLER_DIR/$DMG_NAME"
 
 # Generate background if missing

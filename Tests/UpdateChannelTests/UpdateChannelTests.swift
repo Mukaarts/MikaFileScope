@@ -55,19 +55,43 @@ final class UpdateChannelTests: XCTestCase {
 
     // MARK: - FB-B09-02 · Die Build-Nummer darf nicht einfrieren
 
-    func test_FB0902_buildNummerPasstZurKurzversion() throws {
+    func test_FB0902_buildNummerBleibtNichtHinterDerKurzversion() throws {
         let short = try XCTUnwrap(infoPlist["CFBundleShortVersionString"] as? String)
         let build = try XCTUnwrap(infoPlist["CFBundleVersion"] as? String)
-        let buildNr = try XCTUnwrap(Int(build), "CFBundleVersion muss eine Zahl sein: \(build)")
-        let major = try XCTUnwrap(Int(short.split(separator: ".").first.map(String.init) ?? ""),
-                                  "Kurzversion unerwartet: \(short)")
 
-        // Sparkle vergleicht CFBundleVersion. Steht sie auf 1, während die Kurzversion
-        // bereits bei 2.x liegt, gilt jedes Update als "nicht neuer".
-        XCTAssertGreaterThanOrEqual(
-            buildNr, major,
-            "CFBundleVersion (\(build)) ist kleiner als die Hauptversion von \(short). "
-            + "Sparkle vergleicht die Build-Nummer — sie muss mit jedem Release steigen."
+        // Sparkle vergleicht `CFBundleVersion`, nicht die Kurzversion. Stand sie auf 1,
+        // während die Kurzversion bereits 2.0.0 lautete, galt jedes Update als
+        // "nicht neuer" — genau der Zustand, in dem dieses Projekt monatelang war.
+        //
+        // Erlaubt sind beide gängigen Schreibweisen: eine fortlaufende Zahl oder
+        // dieselbe Punktform wie die Kurzversion. Verboten ist, dass die Build-Nummer
+        // hinter der Kurzversion zurückbleibt.
+        XCTAssertFalse(build.isEmpty, "CFBundleVersion darf nicht leer sein")
+
+        let vergleich = build.compare(short, options: .numeric)
+        XCTAssertNotEqual(
+            vergleich, .orderedAscending,
+            "CFBundleVersion (\(build)) liegt vor der Kurzversion (\(short)). "
+            + "Sparkle vergleicht die Build-Nummer — sie darf nie zurückbleiben."
+        )
+    }
+
+    /// Die Build-Nummer muss mit jedem Release **steigen**. Der appcast beschreibt das
+    /// zuletzt veröffentlichte Paket; ist die Nummer im Projekt nicht höher, bekämen
+    /// bestehende Installationen dasselbe Update endlos erneut angeboten.
+    func test_FB0902_buildNummerIstHoeherAlsImVeroeffentlichtenFeed() throws {
+        let build = try XCTUnwrap(infoPlist["CFBundleVersion"] as? String)
+        let xml = try appcastXML
+        let veroeffentlicht = xml
+            .components(separatedBy: "<sparkle:version>").dropFirst()
+            .compactMap { $0.components(separatedBy: "</sparkle:version>").first }
+        guard let hoechste = veroeffentlicht.max(by: { $0.compare($1, options: .numeric) == .orderedAscending })
+        else { return }  // leerer Feed wird von test_FB0901 abgedeckt
+
+        XCTAssertEqual(
+            build.compare(hoechste, options: .numeric), .orderedDescending,
+            "CFBundleVersion (\(build)) ist nicht höher als die zuletzt veröffentlichte (\(hoechste)). "
+            + "Ein Update mit gleicher Nummer wird endlos erneut angeboten."
         )
     }
 
@@ -101,11 +125,26 @@ final class UpdateChannelTests: XCTestCase {
                       "appcast.xml enthält kein <item> — kein installierter Client erfährt je von einem Update")
     }
 
-    func test_FB0901_appcastNenntDieAktuelleVersion() throws {
+    /// Der Feed beschreibt das **veröffentlichte** Paket, nicht den Stand im Projekt —
+    /// während der Entwicklung liegt das Projekt notwendigerweise davor. Geprüft wird
+    /// deshalb die innere Stimmigkeit: Die genannte Kurzversion muss zu der URL passen,
+    /// unter der das Paket liegt. Läuft beides auseinander, zeigt der Feed auf eine
+    /// andere Fassung als die, die er beschreibt.
+    func test_FB0901_eintragUndDownloadURLPassenZusammen() throws {
         let xml = try appcastXML
-        let short = try XCTUnwrap(infoPlist["CFBundleShortVersionString"] as? String)
-        XCTAssertTrue(xml.contains(short),
-                      "appcast.xml erwähnt die ausgelieferte Version \(short) nicht")
+        let items = xml.components(separatedBy: "<item>").dropFirst()
+        for (i, item) in items.enumerated() {
+            guard let kurz = item.components(separatedBy: "<sparkle:shortVersionString>").dropFirst().first?
+                    .components(separatedBy: "</sparkle:shortVersionString>").first,
+                  let url = item.components(separatedBy: "url=\"").dropFirst().first?
+                    .components(separatedBy: "\"").first
+            else {
+                XCTFail("Eintrag \(i + 1) nennt keine Kurzversion oder keine URL")
+                continue
+            }
+            XCTAssertTrue(url.contains("v\(kurz)"),
+                          "Eintrag \(i + 1) nennt Version \(kurz), lädt aber von \(url)")
+        }
     }
 
     func test_FB0901_jederEintragTraegtEineSignatur() throws {
