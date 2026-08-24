@@ -21,8 +21,19 @@ let tealLight  = NSColor(srgbRed: 0x5D/255.0, green: 0xCA/255.0, blue: 0xA5/255.
 let textPrim   = NSColor(srgbRed: 0xE8/255.0, green: 0xF3/255.0, blue: 0xEE/255.0, alpha: 1.0)
 let textMuted  = NSColor(srgbRed: 0xA3/255.0, green: 0xB2/255.0, blue: 0xAE/255.0, alpha: 1.0)
 
-let image = NSImage(size: NSSize(width: width, height: height))
-image.lockFocus()
+// Draw into a bitmap with explicit pixel dimensions rather than NSImage.lockFocus():
+// on a Retina display the latter doubles the resolution, and the 1200x630 declared in
+// index.html would ship as a 2400x1260 file.
+guard let bitmap = NSBitmapImageRep(
+    bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height,
+    bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+    colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else {
+    print("Failed to create bitmap")
+    exit(1)
+}
+bitmap.size = NSSize(width: width, height: height)
+NSGraphicsContext.saveGraphicsState()
+NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
 
 // Background gradient
 NSGradient(starting: darkBgDeep, ending: darkBg)!
@@ -106,11 +117,9 @@ NSBezierPath(rect: NSRect(x: textX, y: 148, width: 54, height: 3)).fill()
 draw("macOS 14+ · Free · Open source", x: textX, y: 104,
      size: 20, weight: .medium, color: textMuted)
 
-image.unlockFocus()
+NSGraphicsContext.restoreGraphicsState()
 
-guard let tiff = image.tiffRepresentation,
-      let rep = NSBitmapImageRep(data: tiff),
-      let jpeg = rep.representation(using: .jpeg, properties: [.compressionFactor: 0.92]) else {
+guard let jpeg = bitmap.representation(using: .jpeg, properties: [.compressionFactor: 0.92]) else {
     print("Failed to render OG image")
     exit(1)
 }

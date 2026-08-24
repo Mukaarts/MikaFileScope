@@ -132,15 +132,18 @@ Quelltext — `grep -rn "URLSession" Sources/` liefert nichts.
 
 ## Screenshots
 
-In `store/screenshots/`, alle 2880×1800, JPEG ohne Alpha-Kanal:
+In `store/screenshots/`, alle 2880×1800, JPEG ohne Alpha-Kanal. Sie sind gestaltet,
+nicht nur abfotografiert: Überschrift, Unterzeile, Markenverlauf und Punktraster wie im
+OG-Bild der Website. Erzeugt mit `swift scripts/GenerateStoreScreenshots.swift <ordner>`
+— die Texte stehen im Skript und lassen sich dort ändern.
 
 | Datei | Zeigt |
 |---|---|
-| `1-liste.jpg` | Aufschlüsselung nach Dateityp mit Anteilen |
-| `2-diagramme.jpg` | Ring- und Balkendiagramm |
-| `3-zeitachse.jpg` | Altersverteilung nach Anzahl und Volumen |
-| `4-duplikate.jpg` | Duplikatsuche mit rückgewinnbarem Platz |
-| `5-videos.jpg` | Kategoriefilter am Beispiel Videos |
+| `1-liste.jpg` | „Wo ist der Platz geblieben?" — Aufschlüsselung nach Dateityp |
+| `2-diagramme.jpg` | „Auf einen Blick" — Ring- und Balkendiagramm |
+| `3-zeitachse.jpg` | „Was liegt hier nur herum?" — Altersverteilung |
+| `4-duplikate.jpg` | „Doppelt gespeichert" — Duplikatsuche |
+| `5-videos.jpg` | „Nur das, was zählt" — Kategoriefilter |
 
 Neu erzeugen lassen sie sich mit `bash scripts/make-demo-folder.sh` — der Ordner, der
 darauf zu sehen ist, entsteht dabei identisch. Wichtig, damit die Aufnahmen bei der
