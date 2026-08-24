@@ -9,12 +9,20 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
-      - name: Swift-Version anzeigen
-        run: swift --version
+      # Der Runner bringt mehrere Xcode-Fassungen mit und wählt nicht immer die
+      # neueste. Das Paket verlangt Swift-Tools 6.0.
+      - name: Neueste Xcode-Fassung wählen
+        run: |
+          LATEST=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$LATEST" ]; then
+            echo "Verwende $LATEST"
+            sudo xcode-select -s "$LATEST"
+          fi
+          swift --version
 
       - name: Bauen (Direktvertrieb, mit Sparkle)
         run: swift build -c release

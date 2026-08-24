@@ -9,11 +9,22 @@ on:
 
 jobs:
   release:
-    runs-on: macos-14
+    runs-on: macos-15
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
+      # Der Runner bringt mehrere Xcode-Fassungen mit und wählt nicht immer die
+      # neueste. Das Paket verlangt Swift-Tools 6.0.
+      - name: Neueste Xcode-Fassung wählen
+        run: |
+          LATEST=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$LATEST" ]; then
+            echo "Verwende $LATEST"
+            sudo xcode-select -s "$LATEST"
+          fi
+          swift --version
 
       - name: Version aus dem Tag ableiten
         id: version
