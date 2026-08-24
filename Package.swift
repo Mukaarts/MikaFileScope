@@ -35,6 +35,10 @@ let package = Package(
             name: "CoreLogicTests",
             dependencies: ["MikaFileScope"],
             path: "Tests/CoreLogicTests"
+        ),
+        .testTarget(
+            name: "StoreAssetTests",
+            path: "Tests/StoreAssetTests"
         )
     ]
 )
