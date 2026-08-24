@@ -28,7 +28,8 @@ fi
 
 # Read version from Info.plist
 VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP_BUNDLE/Contents/Info.plist" 2>/dev/null || echo "1.0")
-DMG_NAME="${APP_NAME}-v${VERSION}.dmg"
+BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$APP_BUNDLE/Contents/Info.plist" 2>/dev/null || echo "0")
+DMG_NAME="${APP_NAME}-v${VERSION}-${BUILD}.dmg"
 DMG_PATH="$INSTALLER_DIR/$DMG_NAME"
 
 # Generate background if missing
@@ -39,6 +40,10 @@ if [ ! -f "$INSTALLER_DIR/dmg-background.png" ]; then
 fi
 
 # Remove existing DMG
+if [ -f "$DMG_PATH" ]; then
+    echo "HINWEIS: $DMG_NAME existiert bereits und wird ersetzt." >&2
+    echo "         Vorherige Prüfsumme: $(shasum -a 256 "$DMG_PATH" | cut -c1-16)…" >&2
+fi
 rm -f "$DMG_PATH"
 
 mkdir -p "$INSTALLER_DIR"

@@ -1,0 +1,42 @@
+name: CI
+
+# Läuft bei jedem Push und jedem Pull Request. Prüft, was ohne Signatur und ohne
+# Netzwerk prüfbar ist: Bauen beider Varianten und die Testsuite.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift-Version anzeigen
+        run: swift --version
+
+      - name: Bauen (Direktvertrieb, mit Sparkle)
+        run: swift build -c release
+
+      - name: Bauen (Store-Variante, ohne Sparkle)
+        env:
+          APPSTORE: "1"
+        run: swift build -c release --scratch-path .build-appstore
+
+      - name: Gegenprobe — Store-Variante enthält kein Sparkle
+        env:
+          APPSTORE: "1"
+        run: |
+          BIN="$(swift build -c release --scratch-path .build-appstore --show-bin-path)/MikaFileScope"
+          if otool -L "$BIN" | grep -qi sparkle; then
+            echo "FEHLER: Die Store-Variante ist gegen Sparkle gelinkt." >&2
+            exit 1
+          fi
+          echo "OK: keine Sparkle-Verweise."
+
+      - name: Tests
+        run: swift test
+
+      - name: App-Bundle bauen und Signatur prüfen
+        run: bash scripts/build.sh
