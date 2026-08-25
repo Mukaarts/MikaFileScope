@@ -19,6 +19,21 @@ Apple-Konto oder auf einem fremden Dienst erledigen lässt.
 - [ ] `xcodegen generate`, dann in Xcode **Product ▸ Archive** mit Ziel „My Mac".
       Das Archiv muss als *macOS App Archive* erscheinen, nicht als *Generic Xcode
       Archive* — sonst fehlt `INSTALL_PATH` in `project.yml`.
+
+      Ob die Projektstruktur trägt, lässt sich **ohne** Zertifikate prüfen:
+
+      ```bash
+      xcodegen generate
+      xcodebuild archive -project MikaFileScope.xcodeproj -scheme MikaFileScope \
+        -destination "generic/platform=macOS" -archivePath /tmp/Probe.xcarchive \
+        CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+      /usr/libexec/PlistBuddy -c "Print :ApplicationProperties" /tmp/Probe.xcarchive/Info.plist
+      ```
+
+      Kommt dort ein Block mit `ApplicationPath = Applications/MikaFileScope.app`,
+      ist es ein App-Archiv. Fehlt `ApplicationProperties` ganz, bietet Xcode beim
+      Verteilen nur „Custom" an. Zuletzt geprüft am 2026-08-25: App-Archiv,
+      universal (x86_64 + arm64), ohne Sparkle.
 - [ ] Texte aus `metadata/en-US/` einsetzen, Screenshots aus
       `screenshots/en-US/mac-2880x1800/` in Nummernreihenfolge hochladen.
 - [ ] Datenschutz-Fragebogen: durchgehend **Data Not Collected**.
