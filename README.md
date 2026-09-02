@@ -4,6 +4,9 @@ A native macOS utility that scans folders, groups files by extension, and visual
 
 Part of the **Mika+** ecosystem.
 
+**[Download on the Mac App Store](https://apps.apple.com/app/mika-filescope/id6804743268)** — free. Also available as a signed DMG
+from [Releases](https://github.com/daumedia/MikaFileScope/releases).
+
 ## Features
 
 - Recursive folder scanning with file type grouping

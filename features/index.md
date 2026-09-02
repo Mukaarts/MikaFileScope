@@ -1,6 +1,6 @@
 # Features
 
-Stand: 2026-08-23 · Stack-Profil: `swiftui-macos` · Artefaktpfad: `docs/`
+Stand: 2026-09-02 · Stack-Profil: `swiftui-macos` · Artefaktpfad: `docs/`
 
 Elf Bestandsfeatures, vollständig rückerfasst (`sdd-erfassen`, Phasen 1 und 2). Jedes hat
 `spec.md` und `design.md`, die beschreiben, **was der Code tut** — nicht, was er tun
@@ -19,7 +19,7 @@ sollte. Dazu ein geplantes Feature ohne `B`-Präfix, das durch die volle Kette l
 | B09 | Automatische Updates | P1 | **review** | — | 2026-08-24 · BF-06 offen, an Feature 01 gekoppelt |
 | B10 | Auslieferung und Signatur | P0 | **review** | B09 | 2026-08-24 · 14/14 AK, 1 neuer Befund |
 | B11 | Marketing-Website | P2 | **review** | B10 | 2026-08-24 · 13/17 AK, live geprüft |
-| 01 | Mac App Store | P1 | roadmap | B01, B09, B10 | — |
+| 01 | Mac App Store | P1 | **live** | B01, B09, B10 | 2026-09-02 · **2.1.0 im Store** (id6804743268); 2.1.1 behebt die Review-Befunde und ist noch nicht eingereicht |
 
 ## Umfang der Erfassung
 

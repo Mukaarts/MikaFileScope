@@ -5,8 +5,13 @@ Stand: 2026-08-24 (nach der Reparatur) · Quelle: die `qa-report.md` aller elf F
 Diese Liste wird von `sdd-qa` fortgeschrieben. Der Stand unten spiegelt die Reparatur
 vom 2026-08-24 (Zweig `fix/b09-update-kanal`, Aufgabenplan `features/01-mac-app-store/tasks.md`).
 
-**Nichts davon ist ausgeliefert.** Behoben heißt: Die Reproduktion aus dem Testbericht
-greift nicht mehr, Build und Tests sind grün. Die erneute Prüfung steht aus.
+Behoben heißt: Die Reproduktion aus dem Testbericht greift nicht mehr, Build und Tests
+sind grün.
+
+**Ausgeliefert ist davon nur, was in 2.1.0 steckt** — der Fassung, die seit dem
+2026-09-02 im Mac App Store liegt. Die Befunde BF-24 bis BF-31 sind in **2.1.1**
+behoben, und diese Fassung ist noch nicht eingereicht. Solange das so bleibt, tragen
+Nutzer aus dem Store einen wirkungslosen Export und textlose Systemdialoge.
 
 ## Behoben am 2026-09-02 — App Review 2026-09-01
 
