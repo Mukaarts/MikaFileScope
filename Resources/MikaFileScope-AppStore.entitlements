@@ -4,11 +4,17 @@
 <dict>
     <!-- Store-Variante: Sandbox ist Pflicht.
          Der Scanner braucht nur Lesezugriff auf das, was der Nutzer ausdrücklich
-         auswählt — per Dialog oder Drag-and-drop. Schreibrechte entstehen allein
-         über den Speichern-Dialog beim Export, den die Powerbox erteilt. -->
+         auswählt — per Dialog oder Drag-and-drop. -->
     <key>com.apple.security.app-sandbox</key>
     <true/>
-    <key>com.apple.security.files.user-selected.read-only</key>
+    <!-- read-write, NICHT read-only: Ohne dieses Entitlement öffnet die Powerbox den
+         Speichern-Dialog gar nicht erst — nachgewiesen am 2026-09-02 an derselben
+         App, einmal so und einmal so signiert: mit read-only blieb nach „Export as
+         CSV" alles stehen, kein Blatt, keine Datei, keine Fehlermeldung. Genau das
+         hat der App Review am 2026-09-01 als „no response" gemeldet (2.1(a)).
+         Gelesen wird weiterhin nur; geschrieben ausschließlich die Datei, die der
+         Nutzer im Speichern-Dialog selbst benennt. -->
+    <key>com.apple.security.files.user-selected.read-write</key>
     <true/>
     <!-- Für „Rescan" nach einem Neustart: der gewählte Ordner wird als
          Security-Scoped Bookmark gespeichert. -->

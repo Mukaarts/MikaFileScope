@@ -46,6 +46,10 @@ final class ScanEngine {
     var scannedSoFar: Int = 0
 
     private var scanTask: Task<Void, Never>?
+    /// Der Durchlauf im Hintergrund, getrennt festgehalten. Ein `Task.detached` erbt
+    /// den Abbruch seines Erzeugers nicht — ohne eigene Referenz lief die Enumeration
+    /// nach „Cancel" unbemerkt weiter, während die Oberfläche schon Ruhe meldete.
+    private var arbeitsTask: Task<Result<ScanResult, Error>, Never>?
 
     /// Schlüssel des Security-Scoped Bookmarks des zuletzt gescannten Ordners.
     private static let bookmarkKey = "lastFolderBookmark"
@@ -92,9 +96,28 @@ final class ScanEngine {
         let folderURL = url
         let includeHidden = self.includeHidden
         scanTask = Task { [weak self] in
-            let result = await Task.detached {
-                Self.performScan(at: folderURL, includeHidden: includeHidden)
-            }.value
+            // Der Fortschritt wandert über einen Stream aus dem Hintergrund heraus;
+            // geschrieben wird er nur hier, auf dem Main Actor. Dasselbe Muster wie in
+            // `DuplicateDetector.detect(urls:scopeRoot:)`. Zuvor blieb `scannedSoFar`
+            // auf 0 stehen — `performScan` ist `nonisolated` und kam gar nicht daran.
+            // Ein langer Durchlauf war dadurch von einer hängenden App nicht zu
+            // unterscheiden.
+            let (stream, continuation) = AsyncStream<Int>.makeStream()
+            let arbeit = Task.detached {
+                let ergebnis = Self.performScan(at: folderURL, includeHidden: includeHidden) { gezaehlt in
+                    continuation.yield(gezaehlt)
+                }
+                continuation.finish()
+                return ergebnis
+            }
+            self?.arbeitsTask = arbeit
+
+            for await gezaehlt in stream {
+                guard let self, !Task.isCancelled else { break }
+                self.scannedSoFar = gezaehlt
+            }
+
+            let result = await arbeit.value
             guard !Task.isCancelled else { return }
             guard let self else { return }
             switch result {
@@ -121,7 +144,11 @@ final class ScanEngine {
     /// Bricht einen laufenden Durchlauf ab. Das bisherige Ergebnis bleibt stehen.
     func cancelScan() {
         scanTask?.cancel()
+        // Der Hintergrund-Durchlauf muss ausdrücklich mit abgebrochen werden, sonst
+        // enumeriert er weiter, bis der Ordner zu Ende gelesen ist.
+        arbeitsTask?.cancel()
         scanTask = nil
+        arbeitsTask = nil
         isScanning = false
     }
 
@@ -173,7 +200,11 @@ final class ScanEngine {
 
     // MARK: - Durchlauf
 
-    private nonisolated static func performScan(at url: URL, includeHidden: Bool = false) -> Result<ScanResult, Error> {
+    private nonisolated static func performScan(
+        at url: URL,
+        includeHidden: Bool = false,
+        onProgress: (Int) -> Void = { _ in }
+    ) -> Result<ScanResult, Error> {
         let accessing = url.startAccessingSecurityScopedResource()
         defer {
             if accessing { url.stopAccessingSecurityScopedResource() }
@@ -188,10 +219,15 @@ final class ScanEngine {
             includingPropertiesForKeys: keys,
             options: options
         ) else {
+            // Der häufigste Grund ist eine verweigerte Zustimmung, nicht ein defekter
+            // Pfad. Die Meldung muss den Weg zurück nennen, sonst wirkt die App kaputt.
             return .failure(NSError(
                 domain: "MikaFileScope",
                 code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "Cannot access folder: \(url.path)"]
+                userInfo: [NSLocalizedDescriptionKey:
+                    "Could not read \u{201C}\(url.lastPathComponent)\u{201D}. "
+                    + "macOS may have denied access to this folder. You can grant it in "
+                    + "System Settings \u{203A} Privacy & Security \u{203A} Files and Folders."]
             ))
         }
 
@@ -223,6 +259,10 @@ final class ScanEngine {
                 totalSize += fileSize
                 fileURLs.append(fileURL)
 
+                // Nicht bei jeder Datei: Bei hunderttausenden Einträgen kostet der
+                // Stream sonst mehr als der Scan selbst.
+                if totalFiles % 200 == 0 { onProgress(totalFiles) }
+
                 dict[ext, default: (count: 0, bytes: 0)].count += 1
                 dict[ext]!.bytes += fileSize
 
@@ -236,6 +276,8 @@ final class ScanEngine {
                 continue
             }
         }
+
+        onProgress(totalFiles)
 
         let groups = dict.map { ext, data in
             FileTypeGroup(ext: ext, count: data.count, totalBytes: data.bytes)

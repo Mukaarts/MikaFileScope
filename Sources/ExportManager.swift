@@ -19,7 +19,7 @@ enum ExportManager {
                                          folderURL: folderURL, scannedAt: scannedAt) else {
             // Zuvor wurde in diesem Fall "{}" gespeichert — der Nutzer hielt eine leere
             // Datei für einen gelungenen Export.
-            showError("Der Export konnte nicht erzeugt werden.")
+            showError("The export could not be generated. Please run the scan again.")
             return
         }
         let folderName = folderURL?.lastPathComponent ?? "scan"
@@ -94,12 +94,26 @@ enum ExportManager {
         panel.nameFieldStringValue = defaultName
         panel.allowedContentTypes = [allowedType]
 
-        guard panel.runModal() == .OK, let url = panel.url else { return }
+        let schreiben = { (response: NSApplication.ModalResponse) in
+            guard response == .OK, let url = panel.url else { return }
+            do {
+                try content.write(to: url, atomically: true, encoding: .utf8)
+            } catch {
+                // Der Grund gehört dazu: Ein blanker `localizedDescription` sagt
+                // niemandem, was jetzt zu tun ist.
+                showError("\(error.localizedDescription)\n\nPick a different location, such as your Desktop, and try again.")
+            }
+        }
 
-        do {
-            try content.write(to: url, atomically: true, encoding: .utf8)
-        } catch {
-            showError(error.localizedDescription)
+        // Als Blatt am Fenster, nicht per `runModal()`: Der Aufruf kommt aus dem
+        // Action-Block eines SwiftUI-`Menu`, dessen Tracking dann noch läuft. Eine
+        // darin verschachtelte modale Sitzung erschien unter Umständen gar nicht —
+        // der Export sah dann aus, als täte er nichts (Ablehnungsgrund 2.1(a)).
+        if let window = NSApp.keyWindow ?? NSApp.mainWindow {
+            panel.beginSheetModal(for: window, completionHandler: schreiben)
+        } else {
+            // Aus dem Menüleisten-Popover heraus gibt es kein Fenster für ein Blatt.
+            schreiben(panel.runModal())
         }
     }
 }

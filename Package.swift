@@ -39,6 +39,10 @@ let package = Package(
         .testTarget(
             name: "StoreAssetTests",
             path: "Tests/StoreAssetTests"
+        ),
+        .testTarget(
+            name: "BundleConfigTests",
+            path: "Tests/BundleConfigTests"
         )
     ]
 )

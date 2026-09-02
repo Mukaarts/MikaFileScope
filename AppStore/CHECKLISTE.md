@@ -57,3 +57,27 @@ Apple-Konto oder auf einem fremden Dienst erledigen lässt.
 - [ ] `swift test` — alle Prüfungen grün, einschließlich `StoreAssetTests`.
 - [ ] Version in `Resources/Info.plist`, `CHANGELOG.md` und `website/index.html`
       stimmt überein.
+
+## Vor jeder Einreichung — am Bundle prüfen
+
+`swift test --filter BundleConfigTests` deckt beides ab; von Hand gegenprüfen lässt
+es sich am gebauten Paket:
+
+```bash
+bash scripts/build.sh --appstore
+plutil -p "build/appstore/Mika+FileScope.app/Contents/Info.plist" | grep UsageDescription
+codesign -d --entitlements - "build/appstore/Mika+FileScope.app"
+```
+
+- [ ] Sechs `NS*UsageDescription` vorhanden, jede mit Zweck **und** Beispiel.
+      Fehlen sie, erscheinen die Systemdialoge ohne Text — Ablehnungsgrund 5.1.1(ii)
+      am 2026-09-01
+- [ ] `com.apple.security.files.user-selected.read-write` gesetzt, `read-only` nicht.
+      Mit `read-only` öffnet die Powerbox den Speichern-Dialog nicht, und der Export
+      bleibt wirkungslos — Ablehnungsgrund 2.1(a) am 2026-09-01
+- [ ] Den **Benutzerordner** einmal wirklich scannen, nicht nur einen Testordner.
+      Vorher `tccutil reset SystemPolicyDesktopFolder lu.daumedia.mikafilescope`
+      (ebenso `…DocumentsFolder`, `…DownloadsFolder`), sonst greift die gespeicherte
+      Entscheidung und die Dialoge bleiben aus
+- [ ] Export einmal bis zur geschriebenen Datei durchspielen, in der **sandboxed**
+      Fassung — nicht im Debug-Build

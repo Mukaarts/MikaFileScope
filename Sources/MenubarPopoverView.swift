@@ -6,6 +6,7 @@ import SwiftUI
 
 struct MenubarPopoverView: View {
     let engine: ScanEngine
+    @AppStorage(AppStorageKeys.accessIntroSeen) private var accessIntroSeen = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -112,8 +113,8 @@ struct MenubarPopoverView: View {
         HStack {
             // Ohne diesen Weg konnte der beworbene „Quick Scan" nichts scannen:
             // Ein Ordner ließ sich nur im Hauptfenster wählen.
-            Button("Ordner…") {
-                chooseFolder()
+            Button("Folder\u{2026}") {
+                requestFolder()
             }
             .buttonStyle(.plain)
             .font(.system(size: 11))
@@ -139,15 +140,17 @@ struct MenubarPopoverView: View {
         }
     }
 
-    private func chooseFolder() {
-        let panel = NSOpenPanel()
-        panel.canChooseFiles = false
-        panel.canChooseDirectories = true
-        panel.allowsMultipleSelection = false
-        panel.message = "Choose a folder to scan"
-        if panel.runModal() == .OK, let url = panel.url {
-            engine.scan(folder: url)
+    /// Beim ersten Mal erst erklären, danach direkt auswählen. Im Popover lässt sich
+    /// kein Blatt zeigen, deshalb kommt die Erklärung hier als eigenes Fenster —
+    /// derselbe Wortlaut wie im Hauptfenster, siehe `AccessIntro`.
+    private func requestFolder() {
+        guard accessIntroSeen else {
+            guard FolderPicker.confirmIntroModally() else { return }
+            accessIntroSeen = true
+            FolderPicker.choose(engine: engine)
+            return
         }
+        FolderPicker.choose(engine: engine)
     }
 
     private var formattedSize: String {

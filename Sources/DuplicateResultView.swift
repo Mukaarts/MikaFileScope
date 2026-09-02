@@ -47,12 +47,12 @@ struct DuplicateResultView: View {
             ProgressView(value: detector.progress)
                 .progressViewStyle(.linear)
                 .tint(Color.MikaPlus.tealPrimary)
-                .accessibilityLabel("Fortschritt der Duplikatsuche")
-                .accessibilityValue("\(Int(detector.progress * 100)) Prozent")
+                .accessibilityLabel("Duplicate search progress")
+                .accessibilityValue("\(Int(detector.progress * 100)) percent")
             Text("Scanning for duplicates… \(Int(detector.progress * 100)) %")
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
-            Button("Abbrechen") { detector.cancel() }
+            Button("Cancel") { detector.cancel() }
                 .buttonStyle(.bordered)
         }
         .padding(40)
@@ -69,6 +69,7 @@ struct DuplicateResultView: View {
                 .font(.title3)
                 .foregroundStyle(.secondary)
             skippedHint
+            unreadableHint
             Text("FileScope does not delete files.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -78,10 +79,23 @@ struct DuplicateResultView: View {
 
     /// Macht sichtbar, dass kleine Dateien gar nicht geprüft wurden — sonst liest sich
     /// „keine Duplikate gefunden" als „es gibt keine".
+    /// Ein verweigerter Zugriff darf nicht als „nichts gefunden" durchgehen.
+    @ViewBuilder
+    private var unreadableHint: some View {
+        if detector.unreadable > 0 {
+            Text("\(detector.unreadable) file(s) could not be opened and were not compared. "
+                 + "If macOS denied access, you can grant it in System Settings \u{203A} Privacy & Security \u{203A} Files and Folders.")
+                .font(.caption)
+                .foregroundStyle(Color.MikaPlus.destructive)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
     @ViewBuilder
     private var skippedHint: some View {
         if detector.skippedTooSmall > 0 {
-            Text("\(detector.skippedTooSmall) Datei(en) unter \(ByteCountFormatter().string(fromByteCount: DuplicateDetector.minimumSize)) wurden nicht verglichen")
+            Text("\(detector.skippedTooSmall) file(s) below \(ByteCountFormatter().string(fromByteCount: DuplicateDetector.minimumSize)) were not compared")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -93,6 +107,7 @@ struct DuplicateResultView: View {
             VStack(spacing: 4) {
                 Text("FileScope does not delete files. Use Reveal in Finder to review manually.")
                 skippedHint
+                unreadableHint
             }
             .font(.caption)
             .foregroundStyle(.secondary)

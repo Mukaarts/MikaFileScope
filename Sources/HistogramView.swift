@@ -79,7 +79,7 @@ struct HistogramView: View {
                 }
             }
             .frame(height: 220)
-            .accessibilityLabel("Gesamtgröße nach Alter")
+            .accessibilityLabel("Total size by age")
             .accessibilityValue(dateBuckets.map { "\($0.label): \(ByteCountFormatter().string(fromByteCount: $0.totalBytes))" }.joined(separator: ", "))
         }
     }
