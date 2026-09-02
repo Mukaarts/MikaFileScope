@@ -118,7 +118,7 @@ open Package.swift   # Open in Xcode
 - `features/index.md` — Statustabelle aller Features, das Projektmanagement der Kette
 - `features/BNN-slug/` — je Bestandsfeature `spec.md`, `design.md` und `qa-report.md`, alle auf `review`
 - Bestandsfeatures tragen `B`-IDs (`B01`–`B11`), rückwirkend erfasst am 2026-08-23.
-  Neue Features bekommen numerische IDs (`01` = Mac App Store, geplant)
+  Neue Features bekommen numerische IDs (`01` = Mac App Store, **seit 2026-09-02 live**)
 - `features/befunde.md` — projektweite Befundliste, von `sdd-qa` fortgeschrieben
 - `docs/audit-2026-08.md` — **Auditbericht über alle elf Features** (Abschluss vom 2026-08-24)
 - Stand 2026-08-24: **alle 11 Features geprüft**, 142 Akzeptanzkriterien — 119 bestanden,
@@ -131,6 +131,11 @@ open Package.swift   # Open in Xcode
 - **App Review 2026-09-01:** 2.1.0 wurde abgelehnt — 5.1.1(ii) (Zweckbeschreibungen
   fehlten ganz) und 2.1(a) (Export wirkungslos). Behoben in 2.1.1, Ebene 6 in
   `features/01-mac-app-store/tasks.md`, Befunde BF-24 bis BF-31
+- **Im Store liegt 2.1.0** — https://apps.apple.com/app/id6804743268 (`id6804743268`), freigegeben am 2026-09-02, also
+  die Fassung **mit** beiden Fehlern. 2.1.1 ist gebaut und getaggt (lokal), aber noch
+  nicht eingereicht. Bis dahin startet jeder Store-Nutzer einen Export, der nichts tut
+- **Zwei Bezugswege, zwei Versionen:** Store 2.1.0, Direktvertrieb (DMG) 2.0.0.
+  Auseinanderlaufen ist normal, sollte aber pro Release zusammengeführt werden
 - **Offen und dringend:** GitHub-Kontoname `Mukaarts` sichern — ausgelieferte Kopien von
   v2.0.0 fragen dort ihren Sparkle-Feed ab. Es ist der frühere Name **desselben** Kontos
   (umbenannt in `daumedia`), aber nach der Umbenennung unbesetzt und neu registrierbar;

@@ -1,6 +1,11 @@
 # 01 · Mac App Store — Aufgabenplan
 
-Status: `building` · Stand: 2026-09-02 · 32 von 33 erledigt, 1 teilweise
+Status: `review` · Stand: 2026-09-02 · 32 von 33 erledigt, 1 teilweise
+
+**Im Store liegt 2.1.0** (`id6804743268`, freigegeben am 2026-09-02) — also die Fassung
+*vor* Ebene 6. Dort fehlen die Zweckbeschreibungen, und der Export bleibt wirkungslos,
+weil `user-selected.read-only` die Powerbox am Öffnen des Speichern-Dialogs hindert.
+2.1.1 behebt beides und ist gebaut, aber noch nicht eingereicht.
 
 Ziel: App-Store-fähig **und** alle offenen Befunde aus dem Audit vom 2026-08-24 geschlossen.
 Grundlage: `docs/audit-2026-08.md`, `features/befunde.md`, die elf `qa-report.md`.
