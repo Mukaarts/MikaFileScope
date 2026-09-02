@@ -131,7 +131,7 @@ open Package.swift   # Open in Xcode
 - **App Review 2026-09-01:** 2.1.0 wurde abgelehnt — 5.1.1(ii) (Zweckbeschreibungen
   fehlten ganz) und 2.1(a) (Export wirkungslos). Behoben in 2.1.1, Ebene 6 in
   `features/01-mac-app-store/tasks.md`, Befunde BF-24 bis BF-31
-- **Im Store liegt 2.1.0** — https://apps.apple.com/app/id6804743268 (`id6804743268`), freigegeben am 2026-09-02, also
+- **Im Store liegt 2.1.0** — https://apps.apple.com/app/mika-filescope/id6804743268 (`id6804743268`), freigegeben am 2026-09-02, also
   die Fassung **mit** beiden Fehlern. 2.1.1 ist gebaut und getaggt (lokal), aber noch
   nicht eingereicht. Bis dahin startet jeder Store-Nutzer einen Export, der nichts tut
 - **Zwei Bezugswege, zwei Versionen:** Store 2.1.0, Direktvertrieb (DMG) 2.0.0.
