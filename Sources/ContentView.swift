@@ -12,6 +12,10 @@ struct ContentView: View {
     @State private var duplicateDetector = DuplicateDetector()
     @State private var showDuplicates = false
     @AppStorage(AppStorageKeys.showMenubar) private var showMenubar = false
+    @AppStorage(AppStorageKeys.accessIntroSeen) private var accessIntroSeen = false
+    @State private var showAccessIntro = false
+    /// Ein per Drag-and-drop abgelegter Ordner, der auf die Erklärung wartet.
+    @State private var pendingFolderURL: URL?
 
     enum Tab: String, CaseIterable {
         case list = "List"
@@ -29,10 +33,14 @@ struct ContentView: View {
                     .padding(.vertical, 12)
 
                 if engine.unreadableCount > 0 {
+                    // Ohne den Hinweis auf die Systemeinstellungen liest sich eine
+                    // verweigerte Zustimmung wie ein Fehler der App.
                     Label(
-                        "\(engine.unreadableCount) Datei(en) konnten nicht gelesen werden und fehlen in den Summen",
+                        "\(engine.unreadableCount) file(s) could not be read and are missing from the totals. "
+                        + "If macOS denied access, you can grant it in System Settings \u{203A} Privacy & Security \u{203A} Files and Folders.",
                         systemImage: "exclamationmark.triangle"
                     )
+                    .fixedSize(horizontal: false, vertical: true)
                     .font(.caption)
                     .foregroundStyle(Color.MikaPlus.destructive)
                     .padding(.horizontal, 20)
@@ -73,6 +81,22 @@ struct ContentView: View {
         .sheet(isPresented: $showDuplicates) {
             DuplicateResultView(detector: duplicateDetector)
         }
+        .sheet(isPresented: $showAccessIntro) {
+            AccessIntroView {
+                accessIntroSeen = true
+                let abgelegt = pendingFolderURL
+                pendingFolderURL = nil
+                // Erst muss das Blatt weg sein, sonst erschiene der Systemdialog
+                // darüber.
+                DispatchQueue.main.async {
+                    if let abgelegt {
+                        engine.scan(folder: abgelegt)
+                    } else {
+                        FolderPicker.choose(engine: engine)
+                    }
+                }
+            }
+        }
     }
 
     // MARK: - Toolbar
@@ -81,7 +105,7 @@ struct ContentView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .automatic) {
             Button {
-                chooseFolder()
+                requestFolder()
             } label: {
                 Label("Choose Folder", systemImage: "folder.badge.plus")
             }
@@ -93,6 +117,10 @@ struct ContentView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
+                    .truncationMode(.middle)
+                    // Ohne Begrenzung schob ein langer Ordnername das Export-Menü in
+                    // das »-Überlaufmenü, wo es sich kaum noch bedienen ließ.
+                    .frame(maxWidth: 160)
                     .help(url.path)
             }
 
@@ -138,16 +166,23 @@ struct ContentView: View {
                 Label("Export", systemImage: "square.and.arrow.up")
             }
             .disabled(engine.filteredGroups.isEmpty)
+            // Ein graues Menü ohne Begründung ist von einem defekten nicht zu
+            // unterscheiden — genau so wurde es im App Review gemeldet.
+            .help(engine.filteredGroups.isEmpty
+                  ? "Available once a scan has finished and the current category contains files"
+                  : "Save the current result as CSV or JSON")
 
             Button {
                 // Folgt derselben Kategorie wie Tabelle, Diagramme und Export.
-                duplicateDetector.detect(urls: engine.filteredURLs)
+                // Der gescannte Ordner muss mit: In der Sandbox ist er der einzige
+                // Weg, die Dateien überhaupt öffnen zu dürfen.
+                duplicateDetector.detect(urls: engine.filteredURLs, scopeRoot: engine.scannedFolderURL)
                 showDuplicates = true
             } label: {
                 Label("Find Duplicates", systemImage: "doc.on.doc")
             }
             .disabled(engine.filteredURLs.isEmpty || engine.isScanning)
-            .help("Sucht Duplikate in der aktuell gewählten Kategorie")
+            .help("Find duplicates within the selected category")
 
             Toggle(isOn: $showMenubar) {
                 Label("Menubar", systemImage: "menubar.rectangle")
@@ -159,15 +194,17 @@ struct ContentView: View {
                 HStack(spacing: 6) {
                     ProgressView()
                         .controlSize(.small)
-                    Text("\(engine.scannedSoFar > 0 ? "\(engine.scannedSoFar) " : "")Dateien")
+                    Text(engine.scannedSoFar > 0
+                         ? "\(engine.scannedSoFar) files"
+                         : "Scanning\u{2026}")
                         .font(.caption)
                         .monospacedDigit()
                         .foregroundStyle(.secondary)
-                    Button("Abbrechen") { engine.cancelScan() }
+                    Button("Cancel") { engine.cancelScan() }
                         .controlSize(.small)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Scan läuft")
+                .accessibilityLabel("Scan in progress")
             }
         }
     }
@@ -259,7 +296,7 @@ struct ContentView: View {
                     Text(group.displayExt)
                         .font(.system(.body, design: .monospaced))
                 }
-                .accessibilityLabel("Dateityp \(group.displayExt)")
+                .accessibilityLabel("File type \(group.displayExt)")
             }
             .width(min: 120, ideal: 160)
 
@@ -287,8 +324,8 @@ struct ContentView: View {
                         .foregroundStyle(.secondary)
                 }
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel("Anteil")
-                .accessibilityValue(String(format: "%.1f Prozent", pct))
+                .accessibilityLabel("Share of total")
+                .accessibilityValue(String(format: "%.1f percent", pct))
             }
             .width(min: 120, ideal: 160)
         }
@@ -310,7 +347,7 @@ struct ContentView: View {
                 .foregroundStyle(.secondary)
 
             Button("Choose Folder") {
-                chooseFolder()
+                requestFolder()
             }
             .buttonStyle(.bordered)
             .tint(Color.MikaPlus.tealPrimary)
@@ -340,16 +377,14 @@ struct ContentView: View {
 
     // MARK: - Actions
 
-    private func chooseFolder() {
-        let panel = NSOpenPanel()
-        panel.canChooseFiles = false
-        panel.canChooseDirectories = true
-        panel.allowsMultipleSelection = false
-        panel.message = "Choose a folder to scan"
-
-        if panel.runModal() == .OK, let url = panel.url {
-            engine.scan(folder: url)
+    /// Beim ersten Mal erst erklären, danach direkt auswählen.
+    private func requestFolder() {
+        guard accessIntroSeen else {
+            pendingFolderURL = nil
+            showAccessIntro = true
+            return
         }
+        FolderPicker.choose(engine: engine)
     }
 
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
@@ -364,7 +399,14 @@ struct ContentView: View {
                   isDir.boolValue else { return }
 
             DispatchQueue.main.async {
-                engine.scan(folder: url)
+                // Sonst umginge Drag-and-drop die Erklärung, und die Systemabfragen
+                // kämen wieder unangekündigt.
+                if accessIntroSeen {
+                    engine.scan(folder: url)
+                } else {
+                    pendingFolderURL = url
+                    showAccessIntro = true
+                }
             }
         }
         return true

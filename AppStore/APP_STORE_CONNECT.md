@@ -47,12 +47,23 @@ Inhalte" sind.
 ```
 The app requires no sign-in of any kind.
 
-To review: drag any folder onto the window, or pick one via "Choose Folder". The
-Downloads folder works well because it usually holds mixed file types.
+To review: drag any folder onto the window, or pick one via "Choose Folder". A small
+folder with mixed file types shows every feature in a few seconds. Scanning the whole
+home folder also works, but takes considerably longer on a full machine.
+
+Expected system prompts: if you scan a folder that contains Desktop, Documents or
+Downloads, macOS asks for consent to each of them separately. Those dialogs come from
+the system, not from the app. On first launch the app announces them beforehand and
+explains what it reads. Each prompt carries a purpose string describing what is read
+and what for.
 
 The app reads metadata only (name, size, modification date). Only duplicate detection
 reads file contents, block by block, to build a checksum; the contents are neither
 stored nor transmitted.
+
+Export: after a scan, use the Export button in the toolbar or File > Export as CSV
+(Cmd-E) / Export as JSON (Shift-Cmd-E). Both open a save dialog and write the file
+where you point it. The export stays disabled while no scan result is present.
 
 The app makes no network connections.
 ```
@@ -65,7 +76,7 @@ Die Store-Variante läuft in der Sandbox
 | Entitlement | Wofür |
 |---|---|
 | `com.apple.security.app-sandbox` | Pflicht im Store |
-| `com.apple.security.files.user-selected.read-only` | der Ordner, den der Nutzer wählt |
+| `com.apple.security.files.user-selected.read-write` | der Ordner, den der Nutzer wählt — und die Exportdatei, die er im Speichern-Dialog benennt. Mit `read-only` öffnet die Powerbox diesen Dialog nicht |
 | `com.apple.security.files.bookmarks.app-scope` | den zuletzt gewählten Ordner nach einem Neustart wiederfinden |
 
 Kein `com.apple.security.network.client` — die App stellt keine Verbindungen her.

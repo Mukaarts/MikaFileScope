@@ -15,9 +15,9 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>2.1.0</string>
+    <string>2.1.1</string>
     <key>CFBundleVersion</key>
-    <string>2.1.0</string>
+    <string>2.1.1</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
     <key>LSMinimumSystemVersion</key>
@@ -26,6 +26,29 @@
     <true/>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright 2025 dauMedia / Mika. All rights reserved.</string>
+
+    <!-- Zweckbeschreibungen für TCC.
+         Sie sind NICHT dasselbe wie die Sandbox-Entitlements: Die Extension aus dem
+         Öffnen-Dialog erlaubt der Sandbox den Zugriff, TCC fragt darüber hinaus für
+         Schreibtisch, Dokumente, Downloads, Wechselmedien, Netzlaufwerke und
+         Cloud-Ordner noch einmal einzeln nach. Fehlt der Schlüssel, erscheint der
+         Systemdialog ohne jeden Text — Ablehnungsgrund 5.1.1(ii) am 2026-09-01.
+         Der Scan läuft rekursiv, also trifft ein Durchlauf über den Benutzerordner
+         zwangsläufig alle drei geschützten Unterordner.
+         Jeder Text nennt, WAS gelesen wird, WOFÜR, ein Beispiel und die Grenze. -->
+    <key>NSDesktopFolderUsageDescription</key>
+    <string>Mika+FileScope reads the names, sizes and modification dates of files on your Desktop to show how much space each file type uses there — for example, that 340 screenshots take up 12 GB. File contents are read only when you start a duplicate search, and only on this Mac. Nothing is moved, changed, deleted or uploaded.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>Mika+FileScope reads the names, sizes and modification dates of files in your Documents folder to group them by type and show which ones use the most space — for example, which PDFs have not been touched in over a year. File contents are read only when you start a duplicate search, and only on this Mac. Nothing is moved, changed, deleted or uploaded.</string>
+    <key>NSDownloadsFolderUsageDescription</key>
+    <string>Mika+FileScope reads the names, sizes and modification dates of files in your Downloads folder to report what is still sitting there — for example, 18 installer disk images using 9 GB. File contents are read only when you start a duplicate search, and only on this Mac. Nothing is moved, changed, deleted or uploaded.</string>
+    <key>NSRemovableVolumesUsageDescription</key>
+    <string>Mika+FileScope reads the names, sizes and modification dates of files on a connected external drive to show which file types fill it — for example, that video files use 80 percent of a backup disk. Access is read-only: nothing is written to the drive, and nothing is uploaded.</string>
+    <key>NSNetworkVolumesUsageDescription</key>
+    <string>Mika+FileScope reads the names, sizes and modification dates of files on a network share you choose to scan, to show which file types use the most space there — for example, which project folder on a shared server grew the fastest. Access is read-only: nothing is written to the share, and nothing is uploaded.</string>
+    <key>NSFileProviderDomainUsageDescription</key>
+    <string>Mika+FileScope reads the names, sizes and modification dates of files in cloud folders such as iCloud Drive so they can be included in the size report — for example, that a synced Documents folder holds 4 GB of video. Files stay in the cloud: they are not downloaded, changed or removed.</string>
+
     <key>SUFeedURL</key>
     <string>https://raw.githubusercontent.com/daumedia/MikaFileScope/main/appcast.xml</string>
     <key>SUPublicEDKey</key>

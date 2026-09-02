@@ -4,6 +4,43 @@ All notable changes to Mika+FileScope will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.1] - 2026-09-02
+
+Repariert die beiden Beanstandungen aus dem App Review vom 2026-09-01
+(Submission 9b246573-21ad-44c4-a5a5-db0ac143b21c).
+
+### Fixed
+- **Guideline 5.1.1(ii)** — the app carried no purpose strings at all, so the macOS
+  consent dialogs for Desktop, Documents and Downloads appeared with no text. Six
+  `NS*UsageDescription` keys now explain what is read, what for, and what is not
+- **Guideline 2.1(a)** — the export did nothing. The App Store build was signed with
+  `files.user-selected.read-only`, and without the read-write entitlement the Powerbox
+  never opens the save dialog at all — no sheet, no file, no error. Verified on
+  2026-09-02 by signing the same build both ways
+- The save dialog is now presented as a sheet instead of `runModal()` from inside a
+  SwiftUI menu action, where a nested modal session could fail to appear
+- Scan progress stood still at 0: `performScan` is `nonisolated` and never reached
+  `scannedSoFar`. A long scan was indistinguishable from a frozen app
+- Cancelling a scan or a duplicate search left the background work running — a
+  detached task does not inherit its creator's cancellation
+- The duplicate search read files without a security scope, so after a restart it
+  silently reported "no duplicates" instead of saying it could not open anything
+
+### Added
+- One-time explanation before the first folder access: it announces the system
+  prompts and states that only names, sizes and dates are read
+- `File > Export as CSV…` (Cmd-E) and `Export as JSON…` (Shift-Cmd-E) as a second
+  route to the export, independent of the toolbar
+- `Tests/BundleConfigTests` — asserts the purpose strings and the store entitlements,
+  so this rejection cannot recur unnoticed
+
+### Changed
+- Version 2.1.1; `CFBundleShortVersionString` and `CFBundleVersion` stay equal
+- The interface is English throughout — the German fragments in the progress display,
+  the menu, the duplicate sheet and the accessibility labels are gone
+- Denied access is now named as such, with the path to System Settings, instead of
+  being counted silently
+
 ## [Unreleased]
 
 ### Added

@@ -7,4 +7,6 @@
 
 enum AppStorageKeys {
     static let showMenubar = "showMenubar"
+    /// Ob die einmalige Erklärung vor dem ersten Ordnerzugriff schon gelaufen ist.
+    static let accessIntroSeen = "accessIntroSeen"
 }

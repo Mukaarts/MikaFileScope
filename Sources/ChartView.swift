@@ -82,7 +82,7 @@ struct ChartView: View {
                     .cornerRadius(4)
                 }
                 .frame(width: 260, height: 260)
-                .accessibilityLabel("Verteilung nach Größe")
+                .accessibilityLabel("Distribution by size")
                 .accessibilityValue(chartData.map { "\($0.label): \($0.formattedSize)" }.joined(separator: ", "))
 
                 legend
@@ -139,7 +139,7 @@ struct ChartView: View {
                 }
             }
             .frame(height: CGFloat(chartData.count) * 36 + 20)
-            .accessibilityLabel("Größte Dateitypen nach Größe")
+            .accessibilityLabel("Largest file types by size")
             .accessibilityValue(chartData.map { "\($0.label): \($0.formattedSize)" }.joined(separator: ", "))
         }
     }

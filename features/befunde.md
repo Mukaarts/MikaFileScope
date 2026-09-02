@@ -8,6 +8,22 @@ vom 2026-08-24 (Zweig `fix/b09-update-kanal`, Aufgabenplan `features/01-mac-app-
 **Nichts davon ist ausgeliefert.** Behoben heißt: Die Reproduktion aus dem Testbericht
 greift nicht mehr, Build und Tests sind grün. Die erneute Prüfung steht aus.
 
+## Behoben am 2026-09-02 — App Review 2026-09-01
+
+Apple hat 2.1.0 abgelehnt. Verifikation: `swift build`, `swift test` (44 Tests) grün,
+Store-Bundle gebaut und am laufenden Programm nachgeprüft.
+
+| ID | Feature | Befund | Grad | Wie behoben |
+|---|---|---|---|---|
+| BF-24 | 01 | **Keine einzige Zweckbeschreibung im Bundle** — die TCC-Dialoge beim Scan des Benutzerordners erschienen ohne Text | hoch | Sechs `NS*UsageDescription` in `Resources/Info.plist`, jede mit Zweck, Beispiel und Grenze · Ablehnungsgrund 5.1.1(ii) |
+| BF-25 | 01 | **Export ohne jede Wirkung** — `user-selected.read-only` verhindert, dass die Powerbox den Speichern-Dialog überhaupt öffnet | hoch | `read-write`; gegengeprüft mit beiden Signaturen an derselben App · Ablehnungsgrund 2.1(a) |
+| BF-26 | B07 | Speichern-Dialog per `runModal()` aus einer SwiftUI-`Menu`-Aktion | mittel | Als Blatt am Fenster, Rückfall auf `runModal()` ohne Fenster · schließt AS-06 |
+| BF-27 | B08 | Duplikatsuche las ohne Security Scope; nach einem Neustart meldete sie „keine Duplikate", statt zu sagen, dass sie nichts öffnen konnte | hoch | `detect(urls:scopeRoot:)` hält den Scope; nicht lesbare Dateien werden gezählt und benannt |
+| BF-28 | B01 | Scan-Fortschritt stand still — `performScan` ist `nonisolated` und erreichte `scannedSoFar` nie | mittel | Fortschritt über einen `AsyncStream`, Muster aus `DuplicateDetector` |
+| BF-29 | B01/B08 | „Cancel" beendete nur die Anzeige: ein `Task.detached` erbt den Abbruch seines Erzeugers nicht | mittel | Der Hintergrundlauf wird eigens festgehalten und mit abgebrochen |
+| BF-30 | B05 | Deutsche Textfragmente in der englischen Oberfläche (AS-08) | mittel | Durchgehend englisch — Fortschritt, Menü, Duplikatblatt, Beschriftungen |
+| BF-31 | 01 | Kein Hinweis vor den Systemabfragen; verweigerter Zugriff blieb stumm | mittel | `AccessIntroView` vor dem ersten Zugriff; Meldungen nennen die Systemeinstellungen |
+
 ## Offen — und warum sie offen bleiben
 
 Zwei Befunde brauchen noch eine Handlung, die nur der Betreiber vornehmen kann.

@@ -67,7 +67,18 @@ open Package.swift   # Open in Xcode
   mit „An error occurred while running the updater" ab. Mit Developer ID läuft er durch
   (nachgewiesen am 2026-08-24). Für alles, was das Haus verlässt, gilt `--release`
 - Zwei Entitlement-Dateien: `MikaFileScope.entitlements` (Direktvertrieb, ohne Sandbox)
-  und `MikaFileScope-AppStore.entitlements` (Sandbox, `user-selected.read-only`, Bookmarks)
+  und `MikaFileScope-AppStore.entitlements` (Sandbox, `user-selected.read-write`, Bookmarks)
+- **TCC ist nicht die Sandbox.** Das sind zwei Ebenen: Die Extension aus `NSOpenPanel`
+  öffnet die Sandbox, TCC fragt darüber hinaus für Schreibtisch, Dokumente, Downloads,
+  Wechselmedien, Netzlaufwerke und Cloud-Ordner **einzeln** nach. Ein Scan über den
+  Benutzerordner läuft rekursiv in alle drei — ohne `NS*UsageDescription` in
+  `Resources/Info.plist` erscheinen diese Dialoge ohne jeden Text. Genau daran ist
+  die Einreichung am 2026-09-01 gescheitert (5.1.1(ii))
+- **`NSSavePanel` braucht `user-selected.read-write`.** Mit `read-only` öffnet die
+  Powerbox den Speichern-Dialog gar nicht erst: kein Blatt, keine Datei, keine
+  Fehlermeldung. Der zweite Ablehnungsgrund vom 2026-09-01 (2.1(a)), gegengeprüft am
+  2026-09-02 an derselben App, einmal so und einmal so signiert
+- `swift test --filter BundleConfigTests` prüft beides am Bundle, bevor es hochgeht
 - `swift build -c release` erzeugt nur die Host-Architektur; `--universal` baut beide
 
 ## App-Store-Paket
@@ -113,8 +124,13 @@ open Package.swift   # Open in Xcode
 - Stand 2026-08-24: **alle 11 Features geprüft**, 142 Akzeptanzkriterien — 119 bestanden,
   1 durchgefallen, 22 nicht prüfbar. 5 hohe und 13 mittlere Befunde offen, 4 behoben
   (alle in B09, noch nicht ausgeliefert)
-- `Tests/UpdateChannelTests/` — die ersten Tests des Projekts; `swift test` prüft den
-  Update-Kanal gegen `Info.plist` und `appcast.xml`, Laufzeit 0,002 s
+- `Tests/` — vier Testziele, `swift test` läuft ohne Netz und ohne laufende App:
+  `UpdateChannelTests` (Feed gegen `Info.plist` und `appcast.xml`), `CoreLogicTests`,
+  `StoreAssetTests` (Zeichenlimits und Bildmaße der Store-Texte) und
+  `BundleConfigTests` (Zweckbeschreibungen und Store-Entitlements, seit 2026-09-02)
+- **App Review 2026-09-01:** 2.1.0 wurde abgelehnt — 5.1.1(ii) (Zweckbeschreibungen
+  fehlten ganz) und 2.1(a) (Export wirkungslos). Behoben in 2.1.1, Ebene 6 in
+  `features/01-mac-app-store/tasks.md`, Befunde BF-24 bis BF-31
 - **Offen und dringend:** GitHub-Kontoname `Mukaarts` sichern — ausgelieferte Kopien von
   v2.0.0 fragen dort ihren Sparkle-Feed ab. Es ist der frühere Name **desselben** Kontos
   (umbenannt in `daumedia`), aber nach der Umbenennung unbesetzt und neu registrierbar;
